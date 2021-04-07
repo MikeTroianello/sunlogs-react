@@ -1,0 +1,354 @@
+.homepage-top {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  height: 82vh;
+  background: url('../images-and-videos/images/Background-Winter.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0% 22%;
+}
+
+@media (min-width: 427px) and (max-width: 976px) {
+  .homepage-top {
+    height: 150vh;
+    background-position: 0% 22%;
+  }
+}
+
+/* @media (max-width: 427px) {
+  .homepage-top {
+    height: 1200px;
+    background-position: 0% 22%;
+  }
+} */
+
+.homepage-greet {
+  margin-top: 6vh;
+}
+
+.homepage-greet h1 {
+  font-size: 6em;
+}
+
+.homepage-greet p {
+  font-size: 2em;
+}
+
+.homepage-separation {
+  height: 1vh;
+  width: auto;
+  background-color: rgba(148, 151, 168, 0.9);
+  margin-top: -1vh;
+}
+
+.homepage-sad {
+  margin: 5vw;
+  /* margin-left: 5vw; */
+}
+
+.homepage-sad h2 {
+  font-size: 5em;
+  text-align: center;
+}
+
+.homepage-sad h4 {
+  font-size: 2.5em;
+  text-align: center;
+  margin: 10vw;
+}
+
+.homepage-sad p {
+  font-size: 1.75em;
+  text-align: center;
+}
+
+.homepage-sunlog {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.sunlog-description {
+  margin-left: 5vw;
+  text-align: center;
+  max-width: 700px;
+}
+
+.sunlog-description h2 {
+  font-size: 3em;
+}
+
+.sunlog-description p {
+  font-size: 1.3em;
+  margin: 7vh 0;
+}
+
+.sunlog-example {
+  display: flex;
+  flex-direction: column;
+  /* max-width: 98%; */
+  padding: 1%;
+}
+
+.sunlog-example h4 {
+  text-align: center;
+  margin: 0 0 2vh 0;
+}
+
+.sunlog-create {
+  margin: 10vh 0;
+}
+
+.footer {
+  /* position: absolute; */
+  /* bottom: 0;
+  width: 100%; */
+  border-top: 1px solid black;
+  display: flex;
+  justify-content: space-evenly;
+  background-color: rgb(119, 159, 219);
+  overflow: auto;
+}
+
+.footer-button {
+  margin: 3vh 0;
+  height: 50%;
+  width: 122px;
+  font-size: 1em;
+  background-color: rgb(224, 242, 243);
+}
+
+.footer-button:hover {
+  transition: 0.25s;
+  background-color: rgb(183, 207, 218);
+}
+
+/* .footer-contact {
+  text-align: center;
+} */
+
+/* FOR THE FOOTER LOGO */
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  /* color: white; */
+  padding: 1px 6px 0;
+  font-weight: bold;
+  border-style: solid;
+  /* border-color: White; */
+  width: 40px;
+  /* border-width: 2px; */
+  margin: 30px 0;
+}
+
+.mt-logo {
+  margin: 3px 0;
+  text-align: center;
+}
+
+/* EVERYTHING BELOW HERE IS FOR THE CARD FLIP ANIMATION AND POSSIBLY A VIDEO PLAYER */
+
+.signup-login-container {
+  margin: 5vh 0 0 0;
+  display: flex;
+  flex-direction: column;
+  max-width: 425px;
+  align-items: center;
+
+  /* color: green; */
+}
+
+.create-button {
+  width: 90%;
+  height: 50px;
+  border-radius: 1ch;
+  font-size: 1.8em;
+  margin: 15vh 0 0 0;
+  /* background-color: rgba(93, 87, 87, 0.7); */
+  background-color: rgba(180, 194, 60, 0.75);
+}
+
+@media (min-height: 760px) {
+  .create-button {
+    margin: 18vh 0 0 0;
+  }
+}
+
+@media (min-width: 450px) and(max-width: 580px) {
+  .homepage-greet h1 {
+    font-size: 5em;
+  }
+  .homepage-greet p {
+    text-align: center;
+  }
+}
+
+@media (max-width: 450px) {
+  .homepage-greet h1 {
+    font-size: 4em;
+  }
+
+  .homepage-greet p {
+    text-align: center;
+  }
+}
+
+.create-button:hover {
+  transition: 0.3s;
+  background-color: rgba(93, 87, 87, 0.8);
+}
+
+.container {
+  width: 420px;
+  height: 345px;
+  position: relative;
+  -webkit-perspective: 1000px;
+  -moz-perspective: 1000px;
+  -o-perspective: 1000px;
+  perspective: 1000px;
+}
+.card {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+
+  -webkit-transition: -webkit-transform 1s;
+  -moz-transition: -moz-transform 1s;
+  -o-transition: -o-transform 1s;
+  transition: transform 1s;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-transform-origin: 50% 50%;
+}
+
+.card-div {
+  display: block;
+  height: 100%;
+  width: 100%;
+  /*     line-height: 260px; */
+  /*     color: white; */
+  text-align: center;
+  font-weight: bold;
+  /*     font-size: 140px; */
+  position: absolute;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.card .front {
+  /* background: red; */
+  /* background-color: rgba(255, 255, 255, 0.2); */
+}
+.card .back {
+  /* background: blue; */
+  /* background-color: rgba(255, 255, 255, 0.2); */
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
+.card.flipped {
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
+
+/* FOR THE VIDEO */
+
+#myVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+/* Add some content at the bottom of the video/page */
+.content {
+  position: fixed;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: #f1f1f1;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Style the button used to pause/play the video */
+#myBtn {
+  width: 200px;
+  font-size: 18px;
+  padding: 10px;
+  border: none;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+}
+
+#myBtn:hover {
+  background: #ddd;
+  color: black;
+}
+
+@media (max-width: 426px) {
+  .container {
+    max-width: 315px;
+    perspective: 0px;
+  }
+
+  .create-button {
+    margin: 3vh 0 0 0;
+  }
+
+  .signup-login-container {
+    margin: 0;
+  }
+
+  .homepage-top {
+    height: 136vh;
+  }
+
+  .create-button {
+    width: 100%;
+    height: auto;
+  }
+
+  .signup {
+    height: 340px;
+  }
+}
+
+@media (max-width: 375px) {
+  .homepage-sad {
+    margin: 0;
+    text-align: center;
+  }
+
+  .sunlog-description {
+    margin: 0;
+  }
+}
+
+@media (max-width: 470px) {
+  .footer-button {
+    display: none;
+  }
+
+  .footer-contact {
+    font-size: 0.8em;
+    text-align: start;
+    margin-top: 17px;
+  }
+
+  .footer-contact p {
+    margin: 7px 0 0;
+  }
+
+  .footer-logo {
+  }
+}
