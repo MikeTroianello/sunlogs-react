@@ -6,7 +6,7 @@ import {user} from '../redux/reducers/user'
 class AuthService {
   constructor(token) {
     let service = axios.create({
-      baseURL: `${process.env.BASE_URL}`,
+      baseURL: `https://sunlogs-express-api.herokuapp.com/api/`,
       headers: {
         "x-auth-token": token
       },
