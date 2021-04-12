@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import AuthService from '../auth/auth-service';
+import {connect} from 'react-redux';
+import AuthService from '../../auth/auth-service';
 import { Link } from 'react-router-dom';
 import WeatherAudit from '../weather/WeatherAudit';
 
@@ -11,7 +12,7 @@ import {
   faMars as male
 } from '@fortawesome/free-solid-svg-icons';
 
-export default class AllProfiles extends Component {
+class AllProfiles extends Component {
   state = {
     user: null,
     rawLogs: null,
@@ -28,26 +29,26 @@ export default class AllProfiles extends Component {
   service = new AuthService();
 
   componentDidMount = () => {
+
     this.setItAllUp();
   };
 
   setItAllUp = async () => {
     let { profileSelf } = this.props;
+    this.service = new AuthService(this.props.userRedux.token);
 
     let results;
 
     profileSelf
-      ? (results = await this.service.profile())
+      ? (results = await this.service.profile(this.props.userRedux.token))
       : (results = await this.service.seeUser(this.props.match.params.id));
 
-    console.log('RESULTS', results);
     this.makeTheLogs(results, profileSelf);
   };
 
   componentDidUpdate(prevProps) {
     if (this.props.profileSelf != prevProps.profileSelf) {
       this.setItAllUp();
-      console.log(this.state);
     }
   }
 
@@ -56,7 +57,6 @@ export default class AllProfiles extends Component {
   // }
 
   makeTheLogs = (results, profileSelf) => {
-    console.log('making the logs');
     let today = new Date();
     var start = new Date(today.getFullYear(), 0, 0);
     var diff =
@@ -88,7 +88,7 @@ export default class AllProfiles extends Component {
 
       let name;
       let genderIcon;
-
+      
       let theLogs = results.map((log, key) => {
         if (!profileSelf) {
           if (!name) name = log.creatorId.username;
@@ -165,7 +165,8 @@ export default class AllProfiles extends Component {
           logs: theLogs,
           mood: mood,
           profileHeader: 'Your Profile Page',
-          happinessHeader: 'Overall Happiness: '
+          happinessHeader: 'Overall Happiness: ',
+          profileSelf: true,
         });
         let dailyLog = results.filter(log => {
           return log.dayOfYear === day && log.year === Number(year);
@@ -183,7 +184,8 @@ export default class AllProfiles extends Component {
           name: name,
           gender: genderIcon,
           profileHeader: `this is ${name}'s page`,
-          happinessHeader: `${name}'s Overall Happiness: '`
+          happinessHeader: `${name}'s Overall Happiness: `,
+          profileSelf: false,
         });
       }
     }
@@ -210,7 +212,7 @@ export default class AllProfiles extends Component {
       prevState => ({
         oldestFirst: !prevState.oldestFirst
       }),
-      this.makeTheLogs(sortedLogs)
+      this.makeTheLogs(sortedLogs, this.state.profileSelf)
     );
   };
 
@@ -254,3 +256,9 @@ export default class AllProfiles extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  userRedux: state.user
+})
+
+export default connect(mapStateToProps)(AllProfiles)

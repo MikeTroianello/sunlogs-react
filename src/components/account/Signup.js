@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import AuthService from '../auth/auth-service';
+import AuthService from "../../auth/auth-service";
+import {connect} from 'react-redux'
+import {setToken} from '../../redux/actionCreators/userActionCreator'
 
-export default class Signup extends Component {
+class Signup extends Component {
   state = {
     message: null,
     user: '',
@@ -21,8 +23,9 @@ export default class Signup extends Component {
     });
   };
 
-  handleSubmit = e => {
+  handleSubmit = async (e) => {
     e.preventDefault();
+    try{
     const { username, password, gender } = this.state;
     if (!username) {
       this.setState({
@@ -37,19 +40,46 @@ export default class Signup extends Component {
         message: `You must include a gender`
       });
     } else {
-      const state = this.state;
-      this.service
-        .signup(state)
-        .then(results => {
-          this.props.logIt(results);
-        })
-        .catch(error => {
-          this.setState({
-            message: `Username already exists!`
-          });
+        const state = this.state;
+        let results = await this.service.signup(state)
+        await this.props.setToken(results.token)
+        this.props.logIt(results.user);
+      }
+    }catch(error) {
+        this.setState({
+          message: `Username already exists!`
         });
-    }
+    };
   };
+  // handleSubmit = e => {
+  //   e.preventDefault();
+  //   const { username, password, gender } = this.state;
+  //   if (!username) {
+  //     this.setState({
+  //       message: `You must include a username`
+  //     });
+  //   } else if (!password) {
+  //     this.setState({
+  //       message: `You must include a password`
+  //     });
+  //   } else if (!gender) {
+  //     this.setState({
+  //       message: `You must include a gender`
+  //     });
+  //   } else {
+  //     const state = this.state;
+  //     this.service
+  //       .signup(state)
+  //       .then(results => {
+  //         this.props.logIt(results);
+  //       })
+  //       .catch(error => {
+  //         this.setState({
+  //           message: `Username already exists!`
+  //         });
+  //       });
+  //   }
+  // };
 
   render() {
     return (
@@ -83,7 +113,7 @@ export default class Signup extends Component {
                 <input
                   name='email'
                   type='email'
-                  autocomplete='off'
+                  autoComplete='off'
                   placeholder='Your email...'
                   onChange={this.handleChange}
                 />
@@ -124,3 +154,9 @@ export default class Signup extends Component {
     );
   }
 }
+
+const mapDispatchToProps = {
+  setToken
+}
+
+export default connect(null, mapDispatchToProps)(Signup)

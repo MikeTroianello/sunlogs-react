@@ -1,21 +1,30 @@
 import axios from 'axios';
+import {connect} from 'react-redux'
+import {user} from '../redux/reducers/user'
+import {baseUrl} from '../baseUrl'
+
 
 class AuthService {
-  // constructor() {
-  //   let service = axios.create({
-  //     baseURL: 'http://localhost:5000/api',
-  //     withCredentials: true
-  //   });
-  //   this.service = service;
-  // }
-  constructor() {
-    axios.defaults.withCredentials = true;
+  constructor(token) {
     let service = axios.create({
-      baseURL: `${process.env.REACT_APP_API_URL}`,
-      withCredentials: true,
+      baseURL: `${baseUrl}`,
+      headers: {
+        "x-auth-token": token
+      },
+      credentials: 'omit',
     });
     this.service = service;
+    console.log("BACKEND",baseUrl)
+
   }
+
+  test = () => {
+    return this.service
+      .get('/')
+      .then(res=>res.data)
+
+  }
+
 
   signup = (state) => {
     return this.service
@@ -23,6 +32,8 @@ class AuthService {
       .then((response) => response.data);
   };
 
+
+  //TOKEN
   loggedin = (day, year) => {
     return this.service
       .get(`/loggedin/${day}/${year}`)
@@ -32,10 +43,12 @@ class AuthService {
   login = (username, password, day, year) => {
     return this.service
       .post('/login', { username, password, day, year })
-      .then((response) => response.data);
+      .then((response) => {
+       return response.data});
   };
 
-  create = (info) => {
+   //TOKEN
+  create = (info, token) => {
     return this.service
       .post('/log/create', { info })
       .then((response) => response.data);
@@ -46,33 +59,33 @@ class AuthService {
       .get(`/log/date/${year}/${dayOfYear}`)
       .then((response) => response.data);
   };
+ //TOKEN
+  profile = (token) => {
 
-  profile = () => {
     return this.service
       .get(`/log/all/my-posts`)
       .then((response) => response.data);
   };
-
-  seeUser = (userId) => {
-    console.log('SEEING USER ', userId);
+ //TOKEN
+  seeUser = (userId, token) => {
     return this.service
       .get(`/log/all/${userId}`)
       .then((response) => response.data);
   };
-
-  changeInfo = (userInfo) => {
+ //TOKEN
+  changeInfo = (userInfo, token) => {
     return this.service
       .post(`/change-info`, { userInfo })
       .then((response) => response.data);
   };
 
-  changePass = (userInfo) => {
+  changePass = (userInfo, token) => {
     return this.service
       .post(`/change-password`, { userInfo })
       .then((response) => response.data);
   };
-
-  deleteUser = (confirmation) => {
+ //TOKEN
+  deleteUser = (confirmation, token) => {
     return this.service
       .post(`/delete-user`, { confirmation })
       .then((response) => response.data);
@@ -82,4 +95,11 @@ class AuthService {
     return this.service.post('/logout', {}).then((response) => response.data);
   };
 }
+
+const mapStateToProps = (state) => ({
+  user: state.user
+})
+
+
 export default AuthService;
+// export default connect(mapStateToProps)(AuthService);

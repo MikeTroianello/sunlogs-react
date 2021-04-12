@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import AuthService from '../auth/auth-service';
+import AuthService from '../../auth/auth-service';
+import {connect} from "react-redux"
+import {logOutRedux} from '../../redux/actionCreators/userActionCreator'
 
-export default class Logout extends Component {
+class Logout extends Component {
   service = new AuthService();
 
   componentDidMount() {
     this.service.logout().then(results => {
       this.props.logout();
+      this.props.logOutRedux();
       this.props.history.push('/');
     });
   }
@@ -15,3 +18,9 @@ export default class Logout extends Component {
     return <div></div>;
   }
 }
+
+const mapDispatchToProps = {
+  logOutRedux
+}
+
+export default connect(null, mapDispatchToProps)(Logout)

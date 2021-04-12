@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AuthService from './auth/auth-service';
+import AuthService from '../auth/auth-service';
 
 import Login from './account/Login';
 import Signup from './account/Signup';
@@ -51,14 +51,16 @@ export default class Home extends Component {
       });
     }
     this.props.setError(null);
-
+    this.checkIfLoggedIn()
     return <div>this.state.message</div>;
   }
 
   checkIfLoggedIn = () => {
     this.service
       .loggedin()
-      .then(results => {})
+      .then(results => {
+        if(results) this.props.history.push('/profile')
+      })
       .catch(error => console.log(error));
   };
 

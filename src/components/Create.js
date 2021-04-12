@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import AuthService from '../components/auth/auth-service';
+import {connect} from 'react-redux'
+import AuthService from '../auth/auth-service';
 import { Redirect } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,7 +12,7 @@ import {
   faSadTear as crying,
 } from '@fortawesome/free-solid-svg-icons';
 
-export default class Create extends Component {
+class Create extends Component {
   state = {
     mood: null,
     moodEmoji: null,
@@ -26,7 +27,7 @@ export default class Create extends Component {
     year: null,
   };
 
-  service = new AuthService();
+  service = new AuthService(this.props.user.token);
 
   componentDidMount() {
     if (this.props.user) {
@@ -117,12 +118,10 @@ export default class Create extends Component {
       this.service
         .create(info)
         .then((results) => {
-          console.log(results);
           this.props.logCreated();
           this.props.history.push('/view');
         })
         .catch((error) => {
-          console.log(error);
           this.setState({
             message: `There was an error submitting your log`,
           });
@@ -250,3 +249,9 @@ export default class Create extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  user: state.user
+})
+
+export default connect(mapStateToProps)(Create) 

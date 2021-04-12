@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 
-import AuthService from '../auth/auth-service';
+import AuthService from '../../auth/auth-service';
 
-export default class Settings extends Component {
+class Settings extends Component {
   state = {
     message: null,
     hideProfile: false,
@@ -20,7 +21,7 @@ export default class Settings extends Component {
   };
 
   service = new AuthService();
-
+  
   componentDidMount() {
     if (this.props.loggedInUser) {
       const {
@@ -31,7 +32,7 @@ export default class Settings extends Component {
         privateJournalDefault,
         id
       } = this.props.loggedInUser;
-
+    this.service = new AuthService(this.props.user.token);
       this.setState({
         hideProfile: hideProfile,
         privateJournalDefault: privateJournalDefault,
@@ -143,7 +144,7 @@ export default class Settings extends Component {
             <div>
               <h3>Hide your name by Default</h3>
               <h4 className={this.state.hideCreatorDefault ? 'red' : 'green'}>
-                Your Journals are{' '}
+                Your name is{' '}
                 {this.state.hideCreatorDefault ? 'HIDDEN' : 'shown'} by default
               </h4>
               <button
@@ -271,3 +272,10 @@ export default class Settings extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  user: state.user
+})
+
+
+export default connect(mapStateToProps)(Settings)

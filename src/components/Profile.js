@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import AuthService from './auth/auth-service';
+import {connect} from 'react-redux';
+import AuthService from '../auth/auth-service';
 import { Link } from 'react-router-dom';
 import WeatherAudit from './weather/WeatherAudit';
 
@@ -7,7 +8,7 @@ import WeatherAudit from './weather/WeatherAudit';
 
 // import { faCog as cog } from '@fortawesome/free-solid-svg-icons';
 
-export default class Profile extends Component {
+class Profile extends Component {
   state = {
     user: null,
     rawLogs: null,
@@ -19,9 +20,10 @@ export default class Profile extends Component {
     oldestFirst: false
   };
 
-  service = new AuthService();
+  service = new AuthService(this.props.user.token);
 
   componentDidMount() {
+    this.service = new AuthService(this.props.user.token);
     this.service
       .profile()
       .then(results => {
@@ -184,3 +186,9 @@ export default class Profile extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  user: state.user
+})
+
+export default connect(mapStateToProps)(Profile)

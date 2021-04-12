@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import AuthService from '../auth/auth-service';
+import AuthService from '../../auth/auth-service';
+import {connect} from 'react-redux'
+import {setToken} from "../../redux/actionCreators/userActionCreator";
 
-export default class Login extends Component {
+ class Login extends Component {
   state = {
     message: null,
     user: '',
-    username: 'michael',
-    password: 'michael'
+    username: '',
+    password: ''
   };
   service = new AuthService();
 
@@ -17,8 +19,9 @@ export default class Login extends Component {
     });
   };
 
-  handleSubmit = e => {
+  handleSubmit = async (e) => {
     e.preventDefault();
+    try{
     const username = this.state.username;
     const password = this.state.password;
     if (!username) {
@@ -40,28 +43,25 @@ export default class Login extends Component {
       let a = today.toString().split(' ');
       var day = Math.floor(diff / oneDay);
       let year = a[3];
-      this.service
-        .login(username, password, day, year)
-        .then(results => {
-          this.setState({
+      let results = await this.service.login(username, password, day, year)
+        this.setState({
             username: '',
             password: '',
             message: results.message || null
           });
-
+          
           if (!results.message) {
-            localStorage.setItem('user', JSON.stringify(results));
-            this.props.logIt(results);
+            await this.props.setToken(results.token)
+            this.props.logIt(results.user);
           }
-        })
-        .catch(error => {
+        }
+      }catch(error){
           console.log(error);
           this.setState({
             message: `Incorrect Username or Password`
           });
-        });
-    }
-  };
+        };
+    };
 
   render() {
     return (
@@ -77,6 +77,7 @@ export default class Login extends Component {
                 name='username'
                 placeholder='Your name...'
                 onChange={this.handleChange}
+                value={this.state.username}
               />
             </div>
             <div className='form-piece login-form-piece'>
@@ -87,6 +88,7 @@ export default class Login extends Component {
                 placeholder='******'
                 type='password'
                 onChange={this.handleChange}
+                value={this.state.password}
               />
             </div>
             <div className='login-button'>
@@ -102,3 +104,9 @@ export default class Login extends Component {
     );
   }
 }
+
+const mapDispatchToProps = {
+  setToken: (token)=> setToken(token)
+}
+
+export default connect(null, mapDispatchToProps)(Login)

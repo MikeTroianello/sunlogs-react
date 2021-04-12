@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import AuthService from './auth/auth-service';
+import AuthService from "../auth/auth-service";
 import WeatherAudit from './weather/WeatherAudit';
-
+import {connect} from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {
@@ -10,7 +10,7 @@ import {
   faMars as male
 } from '@fortawesome/free-solid-svg-icons';
 
-export default class ViewProfile extends Component {
+class ViewProfile extends Component {
   state = {
     user: null,
     rawLogs: null,
@@ -21,7 +21,7 @@ export default class ViewProfile extends Component {
     oldestFirst: false
   };
 
-  service = new AuthService();
+  service = new AuthService(this.props.user.token);
 
   componentDidMount() {
     this.service
@@ -168,3 +168,9 @@ export default class ViewProfile extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  user: state.user
+})
+
+export default connect(mapStateToProps)(ViewProfile)

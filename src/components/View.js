@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AuthService from './auth/auth-service';
+import AuthService from '../auth/auth-service';
 import { Link } from 'react-router-dom';
 import DatePicker from 'react-date-picker';
 
@@ -268,6 +268,7 @@ export default class View extends Component {
   };
 
   render() {
+
     return (
       <div>
         <div className='view-header top-push'>
