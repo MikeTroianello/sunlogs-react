@@ -1,21 +1,18 @@
 import axios from 'axios';
 import {connect} from 'react-redux'
 import {user} from '../redux/reducers/user'
-import {baseUrl} from '../baseUrl'
 
 
 class AuthService {
   constructor(token) {
     let service = axios.create({
-      baseURL: `${baseUrl}`,
+      baseURL: `${process.env.BASE_URL}`,
       headers: {
         "x-auth-token": token
       },
       credentials: 'omit',
     });
     this.service = service;
-    console.log("BACKEND",baseUrl)
-
   }
 
   test = () => {
