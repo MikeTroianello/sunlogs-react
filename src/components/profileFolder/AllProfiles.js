@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
-import {connect} from 'react-redux';
-import AuthService from '../../auth/auth-service';
-import { Link } from 'react-router-dom';
-import WeatherAudit from '../weather/WeatherAudit';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import AuthService from "../../auth/auth-service";
+import { Link } from "react-router-dom";
+import WeatherAudit from "../weather/WeatherAudit";
+import { profile, seeUser } from "../../auth/authService";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import {
   faGenderless as nonbinary,
   faVenus as female,
-  faMars as male
-} from '@fortawesome/free-solid-svg-icons';
+  faMars as male,
+} from "@fortawesome/free-solid-svg-icons";
 
 class AllProfiles extends Component {
   state = {
@@ -22,14 +23,13 @@ class AllProfiles extends Component {
     notToday: false,
     block: false,
     oldestFirst: false,
-    profileHeader: '',
-    happinessHeader: ''
+    profileHeader: "",
+    happinessHeader: "",
   };
 
   service = new AuthService();
 
   componentDidMount = () => {
-
     this.setItAllUp();
   };
 
@@ -39,9 +39,12 @@ class AllProfiles extends Component {
 
     let results;
 
+    // profileSelf
+    //   ? (results = await this.service.profile(this.props.userRedux.token))
+    //   : (results = await this.service.seeUser(this.props.match.params.id));
     profileSelf
-      ? (results = await this.service.profile(this.props.userRedux.token))
-      : (results = await this.service.seeUser(this.props.match.params.id));
+      ? (results = await profile(this.props.userRedux.token))
+      : (results = await seeUser(this.props.match.params.id));
 
     this.makeTheLogs(results, profileSelf);
   };
@@ -64,23 +67,23 @@ class AllProfiles extends Component {
       start +
       (start.getTimezoneOffset() - today.getTimezoneOffset()) * 60 * 1000;
     var oneDay = 1000 * 60 * 60 * 24;
-    let a = today.toString().split(' ');
+    let a = today.toString().split(" ");
     var day = Math.floor(diff / oneDay);
     let year = a[3];
 
     if (results.length < 1 && profileSelf) {
       this.setState({
         logs: (
-          <div className='no-log-created'>
+          <div className="no-log-created">
             You haven't created a log yet! <br />
-            <Link to='/create'>Make one now!</Link>
+            <Link to="/create">Make one now!</Link>
           </div>
         ),
-        block: true
+        block: true,
       });
     } else if (results.length < 1) {
       this.setState({
-        logs: <div>They haven't created any logs...</div>
+        logs: <div>They haven't created any logs...</div>,
       });
     } else {
       const reducer = (accumulator, currentValue) => accumulator + currentValue;
@@ -88,15 +91,15 @@ class AllProfiles extends Component {
 
       let name;
       let genderIcon;
-      
+
       let theLogs = results.map((log, key) => {
         if (!profileSelf) {
           if (!name) name = log.creatorId.username;
           switch (log.creatorId.gender) {
-            case 'male':
+            case "male":
               genderIcon = male;
               break;
-            case 'female':
+            case "female":
               genderIcon = female;
               break;
             default:
@@ -111,24 +114,24 @@ class AllProfiles extends Component {
             0,
             -1
           )}d@2x.png`;
-        } else weatherString = '';
+        } else weatherString = "";
         return (
-          <div key={key} className='log'>
-            <div className='profile-log-head'>
+          <div key={key} className="log">
+            <div className="profile-log-head">
               <div>
-                <span className='profile-date'>
+                <span className="profile-date">
                   <span>{log.month}</span> <span>{log.dayOfMonth}</span>
-                  {', '}
+                  {", "}
                   <span>{log.year}</span>
                 </span>
                 <h2>
                   {log.county} County, {log.state}
                 </h2>
               </div>
-              <div className='weather-box weather-box-profile'>
+              <div className="weather-box weather-box-profile">
                 <span>
                   <img
-                    className='weather-icon'
+                    className="weather-icon"
                     src={weatherString}
                     alt={log.weatherType}
                   />
@@ -137,7 +140,7 @@ class AllProfiles extends Component {
               </div>
             </div>
 
-            <div className='mood-and-productivity'>
+            <div className="mood-and-productivity">
               <h3>
                 Mood: <p>{log.mood}</p>
               </h3>
@@ -164,16 +167,16 @@ class AllProfiles extends Component {
           rawLogs: results,
           logs: theLogs,
           mood: mood,
-          profileHeader: 'Your Profile Page',
-          happinessHeader: 'Overall Happiness: ',
+          profileHeader: "Your Profile Page",
+          happinessHeader: "Overall Happiness: ",
           profileSelf: true,
         });
-        let dailyLog = results.filter(log => {
+        let dailyLog = results.filter((log) => {
           return log.dayOfYear === day && log.year === Number(year);
         });
         if (dailyLog.length < 1) {
           this.setState({
-            notToday: true
+            notToday: true,
           });
         }
       } else {
@@ -209,8 +212,8 @@ class AllProfiles extends Component {
       );
     }
     this.setState(
-      prevState => ({
-        oldestFirst: !prevState.oldestFirst
+      (prevState) => ({
+        oldestFirst: !prevState.oldestFirst,
       }),
       this.makeTheLogs(sortedLogs, this.state.profileSelf)
     );
@@ -220,23 +223,23 @@ class AllProfiles extends Component {
     let { profileSelf } = this.props;
 
     return (
-      <div className='top-push'>
+      <div className="top-push">
         <h1>{this.state.profileHeader}</h1>
         {this.state.notToday && (
           <h1>
             <b>
-              You have not created a mood log today!{' '}
-              <Link to='/create'>Create one now!</Link>
+              You have not created a mood log today!{" "}
+              <Link to="/create">Create one now!</Link>
             </b>
           </h1>
         )}
-        <div className='profile-mood-box'>
-          <h2 className='view-profile-overall-happiness'>
+        <div className="profile-mood-box">
+          <h2 className="view-profile-overall-happiness">
             {this.state.happinessHeader}
             {this.state.mood}
           </h2>
           {!profileSelf && (
-            <FontAwesomeIcon icon={this.state.gender} size='3x' />
+            <FontAwesomeIcon icon={this.state.gender} size="3x" />
           )}
           {this.state.logs && !this.state.block && (
             <WeatherAudit logs={this.state.rawLogs} />
@@ -245,20 +248,20 @@ class AllProfiles extends Component {
         {/* <button className='sort-by-age' onClick={this.sortByAge}>
           Show {this.state.oldestFirst ? 'oldest' : 'newest'} first
         </button> */}
-        <div className='sort-by-age-box'>
-          <button className='sort-by-age' onClick={this.sortByAge}>
-            Show {this.state.oldestFirst ? 'oldest' : 'newest'} first
+        <div className="sort-by-age-box">
+          <button className="sort-by-age" onClick={this.sortByAge}>
+            Show {this.state.oldestFirst ? "oldest" : "newest"} first
           </button>
         </div>
         <br></br>
-        <div className='log-box'>{this.state.logs}</div>
+        <div className="log-box">{this.state.logs}</div>
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  userRedux: state.user
-})
+  userRedux: state.user,
+});
 
-export default connect(mapStateToProps)(AllProfiles)
+export default connect(mapStateToProps)(AllProfiles);

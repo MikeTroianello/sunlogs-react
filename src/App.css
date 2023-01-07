@@ -344,6 +344,11 @@ a {
   margin: 2vh 0;
 }
 
+.form-piece select {
+  width: 153px;
+  height: 22px;
+}
+
 .login-form-piece {
   font-size: 1.5em;
   margin: 20px 0;

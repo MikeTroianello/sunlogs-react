@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import AuthService from "../../auth/auth-service";
-import {connect} from 'react-redux'
-import {setToken} from '../../redux/actionCreators/userActionCreator'
+import AuthService from '../../auth/auth-service';
+import { connect } from 'react-redux';
+import { setToken } from '../../redux/actionCreators/userActionCreator';
+import { signup } from '../../auth/authService';
 
 class Signup extends Component {
   state = {
@@ -11,45 +12,47 @@ class Signup extends Component {
     password: '',
     email: '',
     phone: '',
-    gender: ''
+    gender: '',
   };
 
   service = new AuthService();
 
-  handleChange = e => {
+  handleChange = (e) => {
     e.preventDefault();
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-    const { username, password, gender } = this.state;
-    if (!username) {
-      this.setState({
-        message: `You must include a username`
-      });
-    } else if (!password) {
-      this.setState({
-        message: `You must include a password`
-      });
-    } else if (!gender) {
-      this.setState({
-        message: `You must include a gender`
-      });
-    } else {
+    try {
+      const { username, password, gender } = this.state;
+      if (!username) {
+        this.setState({
+          message: `You must include a username`,
+        });
+      } else if (!password) {
+        this.setState({
+          message: `You must include a password`,
+        });
+      } else if (!gender) {
+        this.setState({
+          message: `You must include a gender`,
+        });
+      } else {
         const state = this.state;
-        let results = await this.service.signup(state)
-        await this.props.setToken(results.token)
+        let results = await signup(state);
+        console.log('THIS IS THE RESULT', results);
+        localStorage.setItem('token', results.token);
+        // await this.props.setToken(results.token);
         this.props.logIt(results.user);
       }
-    }catch(error) {
-        this.setState({
-          message: `Username already exists!`
-        });
-    };
+    } catch (error) {
+      this.setState({
+        message: `Username already exists!`,
+      });
+    }
   };
   // handleSubmit = e => {
   //   e.preventDefault();
@@ -156,7 +159,7 @@ class Signup extends Component {
 }
 
 const mapDispatchToProps = {
-  setToken
-}
+  setToken,
+};
 
-export default connect(null, mapDispatchToProps)(Signup)
+export default connect(null, mapDispatchToProps)(Signup);

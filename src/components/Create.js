@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
-import {connect} from 'react-redux'
-import AuthService from '../auth/auth-service';
-import { Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import AuthService from "../auth/auth-service";
+import { Redirect } from "react-router-dom";
+import { create } from "../auth/authService";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFrown as frown,
   faLaugh as happiest,
   faSmile as smile,
   faMeh as middlin,
   faSadTear as crying,
-} from '@fortawesome/free-solid-svg-icons';
+} from "@fortawesome/free-solid-svg-icons";
 
 class Create extends Component {
   state = {
@@ -22,7 +23,7 @@ class Create extends Component {
     hideCreator: false,
     err: null,
     message: null,
-    messageCss: 'red',
+    messageCss: "red",
     day: null,
     year: null,
   };
@@ -38,7 +39,7 @@ class Create extends Component {
         start +
         (start.getTimezoneOffset() - today.getTimezoneOffset()) * 60 * 1000;
       var oneDay = 1000 * 60 * 60 * 24;
-      let a = today.toString().split(' ');
+      let a = today.toString().split(" ");
       var day = Math.floor(diff / oneDay);
       let year = Number(a[3]);
 
@@ -56,7 +57,7 @@ class Create extends Component {
 
   handleChange = (e) => {
     if (e.target.value) {
-      e.target.value = e.target.value.replace(/[\r\n\v]+/g, '');
+      e.target.value = e.target.value.replace(/[\r\n\v]+/g, "");
     }
     this.setState({
       [e.target.id]: e.target.innerText || e.target.value,
@@ -96,30 +97,31 @@ class Create extends Component {
       this.setState({
         err: true,
         message: `You already created a log today!`,
-        messageCss: 'red',
+        messageCss: "red",
       });
       setTimeout(function () {}, 1000);
     } else if (!this.state.mood) {
       this.setState({
         message: `You didn't select your mood`,
-        messageCss: 'red',
+        messageCss: "red",
       });
     } else if (!this.state.productivity) {
       this.setState({
         message: `You didn't select your productivity`,
-        messageCss: 'red',
+        messageCss: "red",
       });
     } else {
       let info = this.state;
       this.setState({
-        message: 'Submitting your log',
-        messageCss: 'black',
+        message: "Submitting your log",
+        messageCss: "black",
       });
-      this.service
-        .create(info)
+      // this.service
+      //   .create(info)
+      create(info)
         .then((results) => {
           this.props.logCreated();
-          this.props.history.push('/view');
+          this.props.history.push("/view");
         })
         .catch((error) => {
           this.setState({
@@ -131,89 +133,89 @@ class Create extends Component {
 
   render() {
     if (this.state.err) {
-      return <Redirect to='/view' />;
+      return <Redirect to="/view" />;
     }
 
     return (
-      <div className='create-log-page'>
-        <div className='create-log'>
+      <div className="create-log-page">
+        <div className="create-log">
           <h1>Create a Mood Log</h1>
-          <div className='create-mood-box'>
-            <label htmlFor='mood'>
+          <div className="create-mood-box">
+            <label htmlFor="mood">
               What is your mood? {this.state.moodEmoji}
             </label>
             <br />
-            <div className='one-through-five'>
+            <div className="one-through-five">
               <FontAwesomeIcon
-                id='mood'
-                className='emotion'
+                id="mood"
+                className="emotion"
                 icon={crying}
-                size='2x'
+                size="2x"
                 onClick={() => this.setMood(1)}
               />
               <FontAwesomeIcon
-                id='mood'
+                id="mood"
                 icon={frown}
-                size='2x'
+                size="2x"
                 onClick={() => this.setMood(2)}
               />
               <FontAwesomeIcon
-                id='mood'
+                id="mood"
                 icon={middlin}
-                size='2x'
+                size="2x"
                 onClick={() => this.setMood(3)}
               />
               <FontAwesomeIcon
-                id='mood'
+                id="mood"
                 icon={smile}
-                size='2x'
+                size="2x"
                 onClick={() => this.setMood(4)}
               />
               <FontAwesomeIcon
-                id='mood'
+                id="mood"
                 icon={happiest}
-                size='2x'
+                size="2x"
                 onClick={() => this.setMood(5)}
               />
             </div>
           </div>
-          <div className='create-productivity-box'>
-            <label htmlFor='productivity'>
-              How productive do you think you were today?{' '}
-              <span className='one-through-five-box'>
+          <div className="create-productivity-box">
+            <label htmlFor="productivity">
+              How productive do you think you were today?{" "}
+              <span className="one-through-five-box">
                 <b>{this.state.productivity}</b>
               </span>
             </label>
             <br />
-            <div className='one-through-five' onClick={this.handleChange}>
-              <span id='productivity'>1</span>
-              <span id='productivity'>2</span>
-              <span id='productivity'>3</span>
-              <span id='productivity'>4</span>
-              <span id='productivity'>5</span>
+            <div className="one-through-five" onClick={this.handleChange}>
+              <span id="productivity">1</span>
+              <span id="productivity">2</span>
+              <span id="productivity">3</span>
+              <span id="productivity">4</span>
+              <span id="productivity">5</span>
             </div>
           </div>
           <div>
-            <label htmlFor='journal'>
+            <label htmlFor="journal">
               What were some of your thoughts about today?
             </label>
             <textarea
-              type='textbox'
-              name='journal'
-              id='journal'
-              rows='6'
-              cols='48'
-              autocomplete='off'
-              maxLength='250'
-              placeholder='max length 250 characters'
+              type="textbox"
+              name="journal"
+              id="journal"
+              rows="6"
+              cols="48"
+              autocomplete="off"
+              maxLength="250"
+              placeholder="max length 250 characters"
               onChange={this.handleChange}
             />
           </div>
           <div>
-            <label htmlFor='privateJournal'>Make this a private Log:</label>
+            <label htmlFor="privateJournal">Make this a private Log:</label>
             <input
-              type='checkbox'
-              name='privateJournal'
+              type="checkbox"
+              name="privateJournal"
               checked={this.state.privateJournal}
               onChange={() => {
                 this.setState({
@@ -223,10 +225,10 @@ class Create extends Component {
             />
           </div>
           <div>
-            <label htmlFor='hideCreator'>Hide your status as creator*:</label>
+            <label htmlFor="hideCreator">Hide your status as creator*:</label>
             <input
-              type='checkbox'
-              name='hideCreator'
+              type="checkbox"
+              name="hideCreator"
               checked={this.state.hideCreator}
               onChange={() => {
                 this.setState({
@@ -239,7 +241,7 @@ class Create extends Component {
               will be unable to know you created it)
             </p>
           </div>
-          <button className='create-log-button' onClick={this.handleSubmit}>
+          <button className="create-log-button" onClick={this.handleSubmit}>
             Log It
           </button>
           <br></br>
@@ -251,7 +253,7 @@ class Create extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.user
-})
+  user: state.user,
+});
 
-export default connect(mapStateToProps)(Create) 
+export default connect(mapStateToProps)(Create);

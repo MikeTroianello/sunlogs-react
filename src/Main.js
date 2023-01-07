@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import {connect} from 'react-redux';
-import {setToken, getToken} from './redux/actionCreators/userActionCreator'
+import { connect } from 'react-redux';
+import { setToken, getToken } from './redux/actionCreators/userActionCreator';
 
 import Home from './components/Home';
 import Login from './components/account/Login';
@@ -13,22 +13,22 @@ import View from './components/View';
 import Profile from './components/Profile';
 import ViewProfile from './components/ViewProfile';
 import Navbar from './components/Navbar';
-import Routes from './auth/routes'
+import Routes from './auth/routes';
 
 import AllProfiles from './components/profileFolder/AllProfiles';
 
 import AuthService from './auth/auth-service';
+import { loggedin } from './auth/authService';
 
 import './App.css';
 import './css/homepage.css';
-
 
 class Main extends Component {
   state = {
     loggedInUser: null,
     message: 'Not logged in',
     createdLogToday: false,
-    errMessage: null
+    errMessage: null,
   };
 
   service = new AuthService();
@@ -37,21 +37,21 @@ class Main extends Component {
     if (!this.state.loggedInUser) {
       this.isLoggedIn();
     }
-  }
-
-  testIt = thing => {
-    return typeof thing === 'string' ? true : false;
   };
 
-  setNewState = results => {
+  testIt = (thing) => {
+    return typeof thing === 'string';
+  };
+
+  setNewState = (results) => {
     this.setState({
-      loggedInUser: results
+      loggedInUser: results,
     });
   };
 
   isLoggedIn = async () => {
-    try{
-      await this.props.getToken()
+    try {
+      await this.props.getToken();
       this.service = new AuthService(this.props.user.token);
       let today = new Date();
       var start = new Date(today.getFullYear(), 0, 0);
@@ -63,17 +63,16 @@ class Main extends Component {
       let a = today.toString().split(' ');
       var day = Math.floor(diff / oneDay);
       let year = Number(a[3]);
-      let response = await this.service.loggedin(day, year)
-      await this.props.setToken(response.token)
-          this.setState(
-            {
-              loggedInUser: response.user,
-              message: `Hello, ${response.user.username}!`,
-              createdLogToday: response.user.createdToday
-            });
-    }catch(err) {
+      let response = await loggedin(day, year);
+      await this.props.setToken(response.token);
       this.setState({
-        loggedInUser: false
+        loggedInUser: response.user,
+        message: `Hello, ${response.user.username}!`,
+        createdLogToday: response.user.createdToday,
+      });
+    } catch (err) {
+      this.setState({
+        loggedInUser: false,
       });
     }
   };
@@ -82,38 +81,36 @@ class Main extends Component {
     let storedUser = JSON.parse(localStorage.getItem('user'));
     this.setState({
       username: storedUser.username,
-      message: `Hello ${storedUser.username}`
+      message: `Hello ${storedUser.username}`,
     });
   };
 
-  setError = err => {
+  setError = (err) => {
     this.setState({
-      errMessage: err
+      errMessage: err,
     });
   };
 
   logCreated = () => {
-
     this.setState({
-      createdLogToday: true
+      createdLogToday: true,
     });
   };
 
   logout = () => {
     this.setState({
       loggedInUser: null,
-      message: 'Have a great day!'
+      message: 'Have a great day!',
     });
     localStorage.removeItem('user');
   };
 
-  getTheUser = userObj => {
-    this.setState(
-      {
-        loggedInUser: userObj,
-        message: `Hello, ${userObj.username}!`,
-        createdLogToday: userObj.createdToday
-      });
+  getTheUser = (userObj) => {
+    this.setState({
+      loggedInUser: userObj,
+      message: `Hello, ${userObj.username}!`,
+      createdLogToday: userObj.createdToday,
+    });
   };
 
   render() {
@@ -134,7 +131,7 @@ class Main extends Component {
           <Route
             exact
             path='/'
-            render={props => (
+            render={(props) => (
               <Home
                 {...props}
                 err={this.state.errMessage}
@@ -146,7 +143,7 @@ class Main extends Component {
           <Route
             exact
             path='/signup'
-            render={props => (
+            render={(props) => (
               <Signup
                 {...props}
                 testIt={this.testIt}
@@ -157,7 +154,7 @@ class Main extends Component {
           <Route
             exact
             path='/login'
-            render={props => (
+            render={(props) => (
               <Login
                 {...props}
                 testIt={this.testIt}
@@ -168,7 +165,7 @@ class Main extends Component {
           <Route
             exact
             path='/profile'
-            render={props => (
+            render={(props) => (
               <AllProfiles
                 {...props}
                 user={this.state.loggedInUser}
@@ -186,7 +183,7 @@ class Main extends Component {
           <Route
             exact
             path='/logout'
-            render={props => (
+            render={(props) => (
               <Logout
                 {...props}
                 logout={this.logout}
@@ -197,7 +194,7 @@ class Main extends Component {
           <Route
             exact
             path='/create'
-            render={props => (
+            render={(props) => (
               <Create
                 {...props}
                 logCreated={this.logCreated}
@@ -210,7 +207,7 @@ class Main extends Component {
           />
           <Route
             path='/view'
-            render={props => (
+            render={(props) => (
               <View
                 {...props}
                 createdToday={this.state.createdLogToday}
@@ -220,7 +217,7 @@ class Main extends Component {
           />
           <Route
             path='/settings'
-            render={props => (
+            render={(props) => (
               <Settings
                 {...props}
                 loggedInUser={this.state.loggedInUser}
@@ -230,7 +227,7 @@ class Main extends Component {
           />
           <Route
             path='/view-profile/:id'
-            render={props => (
+            render={(props) => (
               <AllProfiles
                 {...props}
                 setUser={this.setUser}
@@ -248,13 +245,13 @@ class Main extends Component {
   }
 }
 
-const mapStateToProps = (state)=> ({
-  user: state.user
-})
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
 
 const mapDispatchToProps = {
-  setToken: (token)=>setToken(token),
-  getToken
-}
+  setToken: (token) => setToken(token),
+  getToken,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
-import AuthService from '../../auth/auth-service';
-import {connect} from "react-redux"
-import {logOutRedux} from '../../redux/actionCreators/userActionCreator'
+import React, { Component } from "react";
+import AuthService from "../../auth/auth-service";
+import { connect } from "react-redux";
+import { logOutRedux } from "../../redux/actionCreators/userActionCreator";
+import { logout } from "../../auth/authService";
 
 class Logout extends Component {
   service = new AuthService();
 
   componentDidMount() {
-    this.service.logout().then(results => {
+    logout().then((results) => {
       this.props.logout();
       this.props.logOutRedux();
-      this.props.history.push('/');
+      this.props.history.push("/");
     });
   }
 
@@ -20,7 +21,7 @@ class Logout extends Component {
 }
 
 const mapDispatchToProps = {
-  logOutRedux
-}
+  logOutRedux,
+};
 
-export default connect(null, mapDispatchToProps)(Logout)
+export default connect(null, mapDispatchToProps)(Logout);

@@ -1,18 +1,19 @@
-import React, { Component } from 'react';
-import AuthService from '../auth/auth-service';
-import { Link } from 'react-router-dom';
-import DatePicker from 'react-date-picker';
+import React, { Component } from "react";
+import AuthService from "../auth/auth-service";
+import { Link } from "react-router-dom";
+import DatePicker from "react-date-picker";
+import { getDate } from "../auth/authService";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGenderless as nonbinary,
   faVenus as female,
-  faMars as male
-} from '@fortawesome/free-solid-svg-icons';
+  faMars as male,
+} from "@fortawesome/free-solid-svg-icons";
 
-import StateFilter from './fiterByLocation/StateFilter';
-import CountyFilter from './fiterByLocation/CountyFilter';
-import WeatherAudit from './weather/WeatherAudit';
+import StateFilter from "./fiterByLocation/StateFilter";
+import CountyFilter from "./fiterByLocation/CountyFilter";
+import WeatherAudit from "./weather/WeatherAudit";
 
 export default class View extends Component {
   state = {
@@ -30,7 +31,7 @@ export default class View extends Component {
     counties: [],
     state: undefined,
     stateFiltered: false,
-    county: undefined
+    county: undefined,
   };
 
   service = new AuthService();
@@ -50,13 +51,12 @@ export default class View extends Component {
         1000;
     var oneDay = 1000 * 60 * 60 * 24;
     var day = Math.floor(diff / oneDay);
-    let a = dateToLookFor.toString().split(' ');
+    let a = dateToLookFor.toString().split(" ");
     let year = a[3];
 
-    this.service
-      .getDate(year, day)
-      .then(results => {
-        const states = results.specificDay.map(log => {
+    getDate(year, day)
+      .then((results) => {
+        const states = results.specificDay.map((log) => {
           return log.state;
         });
 
@@ -68,50 +68,50 @@ export default class View extends Component {
           yours: results.yours,
           id: results.id,
           states: [...new Set(states)],
-          counties: []
+          counties: [],
         });
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   };
 
   filterByState = () => {
-    let stateLogs = this.state.logs.filter(log => {
+    let stateLogs = this.state.logs.filter((log) => {
       return log.state === this.state.state;
     });
 
     let counties = new Set();
 
-    stateLogs.map(log => {
+    stateLogs.map((log) => {
       return counties.add(log.county);
     });
 
     this.setState({
       filteredLogs: stateLogs,
       counties: [...counties],
-      genderSearchMessage: null
+      genderSearchMessage: null,
     });
   };
 
   filterByCounty = () => {
-    let countyLogs = this.state.logs.filter(log => {
+    let countyLogs = this.state.logs.filter((log) => {
       return log.county === this.state.county;
     });
 
     this.setState({
       filteredLogs: countyLogs,
-      genderSearchMessage: null
+      genderSearchMessage: null,
     });
   };
 
   // HERE
 
-  filterByGender = e => {
-    let genderLogs = this.state.filteredLogsCopy.filter(log => {
+  filterByGender = (e) => {
+    let genderLogs = this.state.filteredLogsCopy.filter((log) => {
       return log.creatorId.gender === e.target.value;
     });
     this.setState({
       filteredLogs: genderLogs,
-      genderSearchMessage: `Showing all ${e.target.value} logs`
+      genderSearchMessage: `Showing all ${e.target.value} logs`,
     });
   };
 
@@ -119,8 +119,8 @@ export default class View extends Component {
     if (this.state.filteredLogs.length < 1 && this.state.today === new Date()) {
       return (
         <div>
-          No one has created a log today.{' '}
-          <Link to='/create'>Why not be the first?</Link>
+          No one has created a log today.{" "}
+          <Link to="/create">Why not be the first?</Link>
         </div>
       );
     } else if (this.state.filteredLogs.length < 1) {
@@ -139,7 +139,7 @@ export default class View extends Component {
             0,
             -1
           )}d@2x.png`;
-        } else weatherString = '';
+        } else weatherString = "";
         let theTag = (
           <Link to={`/view-profile/${log.creatorId._id}`}>
             {log.creatorId.username}
@@ -147,19 +147,19 @@ export default class View extends Component {
         );
         if (
           log.creatorId.username ===
-            'This user has decided to keep their name private' ||
+            "This user has decided to keep their name private" ||
           this.state.id === log.creatorId._id ||
-          log.creatorId.username === 'Deleted' ||
+          log.creatorId.username === "Deleted" ||
           log.creatorId.hideProfile
         ) {
           theTag = log.creatorId.username;
         }
 
         switch (log.creatorId.gender) {
-          case 'male':
+          case "male":
             genderIcon = male;
             break;
-          case 'female':
+          case "female":
             genderIcon = female;
             break;
           default:
@@ -167,24 +167,24 @@ export default class View extends Component {
             break;
         }
         return (
-          <div className='log' key={key}>
-            <div className='log-head '>
+          <div className="log" key={key}>
+            <div className="log-head ">
               <span>
-                <h3 className='name-and-gender'>
-                  <div className='name-box'>
+                <h3 className="name-and-gender">
+                  <div className="name-box">
                     {this.state.id === log.creatorId._id ? (
                       <i>~(You!)~</i>
                     ) : (
                       theTag
                     )}
                   </div>
-                  <div className='gender'>
-                    <FontAwesomeIcon icon={genderIcon} size='2x' />
+                  <div className="gender">
+                    <FontAwesomeIcon icon={genderIcon} size="2x" />
                   </div>
-                  <div className='weather-box'>
+                  <div className="weather-box">
                     <span>
                       <img
-                        className='weather-icon'
+                        className="weather-icon"
                         src={weatherString}
                         alt={log.weatherType}
                       />
@@ -193,7 +193,7 @@ export default class View extends Component {
                   </div>
                 </h3>
                 {log.creatorId.username !==
-                  'This user has decided to keep their name private' &&
+                  "This user has decided to keep their name private" &&
                   log.hideCreator && (
                     <i>You have hidden your name for this log</i>
                   )}
@@ -203,7 +203,7 @@ export default class View extends Component {
             <h2>
               {log.county} County, {log.state}
             </h2>
-            <div className='mood-and-productivity'>
+            <div className="mood-and-productivity">
               <h3>
                 Mood: <p>{log.mood}</p>
               </h3>
@@ -212,7 +212,7 @@ export default class View extends Component {
               </h3>
             </div>
             <h4>Log: {log.journal}</h4>
-            {log.journal !== 'This log is set to private' &&
+            {log.journal !== "This log is set to private" &&
               log.privateJournal && <i>You made this log private</i>}
           </div>
         );
@@ -220,17 +220,17 @@ export default class View extends Component {
     }
   };
 
-  onChange = date => {
+  onChange = (date) => {
     if (date) {
-      this.setState({ date }, this.sanitizeDate(date, 'NEW DATE'));
+      this.setState({ date }, this.sanitizeDate(date, "NEW DATE"));
     }
   };
 
-  filterState = e => {
-    if (e.target.value !== 'Filter by State:') {
+  filterState = (e) => {
+    if (e.target.value !== "Filter by State:") {
       this.setState(
         {
-          [e.target.name]: e.target.value
+          [e.target.name]: e.target.value,
         },
         () => {
           this.filterByState();
@@ -239,11 +239,11 @@ export default class View extends Component {
     }
   };
 
-  filterCounty = e => {
-    if (e.target.value !== 'Filter by County:') {
+  filterCounty = (e) => {
+    if (e.target.value !== "Filter by County:") {
       this.setState(
         {
-          [e.target.name]: e.target.value
+          [e.target.name]: e.target.value,
         },
         () => {
           this.filterByCounty();
@@ -262,38 +262,37 @@ export default class View extends Component {
       counties: [],
       state: undefined,
       stateFiltered: false,
-      county: undefined
+      county: undefined,
     });
     this.sanitizeDate(this.state.today);
   };
 
   render() {
-
     return (
       <div>
-        <div className='view-header top-push'>
+        <div className="view-header top-push">
           <div>
             <h1>THESE ARE TODAYS LOGS:</h1>
             {!this.props.createdToday && this.props.loggedInUser && (
-              <div className='create-log-link'>
-                You haven't created a log today.{' '}
-                <Link to='/create'>Make one now!</Link>
+              <div className="create-log-link">
+                You haven't created a log today.{" "}
+                <Link to="/create">Make one now!</Link>
               </div>
             )}
           </div>
           {this.state.filteredLogs && this.weatherAudit()}
         </div>
-        <div className='filter-box'>
-          <div className='gender-filter'>
+        <div className="filter-box">
+          <div className="gender-filter">
             Filter By Gender:
             <br />
-            <button onClick={this.filterByGender} value='male'>
+            <button onClick={this.filterByGender} value="male">
               male
             </button>
-            <button onClick={this.filterByGender} value='female'>
+            <button onClick={this.filterByGender} value="female">
               female
             </button>
-            <button onClick={this.filterByGender} value='nonbinary'>
+            <button onClick={this.filterByGender} value="nonbinary">
               non-binary
             </button>
             <br />
@@ -318,13 +317,13 @@ export default class View extends Component {
             />
           </div>
           <div>
-            <button className='view-default-logs' onClick={this.defaultLogs}>
+            <button className="view-default-logs" onClick={this.defaultLogs}>
               Back to Default
             </button>
           </div>
         </div>
 
-        <div className='log-box'>
+        <div className="log-box">
           {this.state.filteredLogs && this.showLogs()}
         </div>
       </div>

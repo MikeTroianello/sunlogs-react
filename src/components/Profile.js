@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import {connect} from 'react-redux';
-import AuthService from '../auth/auth-service';
-import { Link } from 'react-router-dom';
-import WeatherAudit from './weather/WeatherAudit';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import AuthService from "../auth/auth-service";
+import { Link } from "react-router-dom";
+import WeatherAudit from "./weather/WeatherAudit";
+import { profile } from "../auth/authService";
 
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -17,24 +18,23 @@ class Profile extends Component {
     mood: 0,
     notToday: false,
     block: false,
-    oldestFirst: false
+    oldestFirst: false,
   };
 
   service = new AuthService(this.props.user.token);
 
   componentDidMount() {
-    this.service = new AuthService(this.props.user.token);
-    this.service
-      .profile()
-      .then(results => {
+    // this.service = new AuthService(this.props.user.token);
+    profile()
+      .then((results) => {
         this.makeTheLogs(results);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
 
-  makeTheLogs = results => {
+  makeTheLogs = (results) => {
     let today = new Date();
     var start = new Date(today.getFullYear(), 0, 0);
     var diff =
@@ -42,19 +42,19 @@ class Profile extends Component {
       start +
       (start.getTimezoneOffset() - today.getTimezoneOffset()) * 60 * 1000;
     var oneDay = 1000 * 60 * 60 * 24;
-    let a = today.toString().split(' ');
+    let a = today.toString().split(" ");
     var day = Math.floor(diff / oneDay);
     let year = a[3];
 
     if (results.length < 1) {
       this.setState({
         logs: (
-          <div className='no-log-created'>
+          <div className="no-log-created">
             You haven't created a log yet! <br />
-            <Link to='/create'>Make one now!</Link>
+            <Link to="/create">Make one now!</Link>
           </div>
         ),
-        block: true
+        block: true,
       });
     } else {
       const reducer = (accumulator, currentValue) => accumulator + currentValue;
@@ -67,24 +67,24 @@ class Profile extends Component {
             0,
             -1
           )}d@2x.png`;
-        } else weatherString = '';
+        } else weatherString = "";
         return (
-          <div key={key} className='log'>
-            <div className='profile-log-head'>
+          <div key={key} className="log">
+            <div className="profile-log-head">
               <div>
-                <span className='profile-date'>
+                <span className="profile-date">
                   <span>{log.month}</span> <span>{log.dayOfMonth}</span>
-                  {', '}
+                  {", "}
                   <span>{log.year}</span>
                 </span>
                 <h2>
                   {log.county} County, {log.state}
                 </h2>
               </div>
-              <div className='weather-box weather-box-profile'>
+              <div className="weather-box weather-box-profile">
                 <span>
                   <img
-                    className='weather-icon'
+                    className="weather-icon"
                     src={weatherString}
                     alt={log.weatherType}
                   />
@@ -93,7 +93,7 @@ class Profile extends Component {
               </div>
             </div>
 
-            <div className='mood-and-productivity'>
+            <div className="mood-and-productivity">
               <h3>
                 Mood: <p>{log.mood}</p>
               </h3>
@@ -116,14 +116,14 @@ class Profile extends Component {
       this.setState({
         rawLogs: results,
         logs: theLogs,
-        mood: mood
+        mood: mood,
       });
-      let dailyLog = results.filter(log => {
+      let dailyLog = results.filter((log) => {
         return log.dayOfYear === day && log.year === Number(year);
       });
       if (dailyLog.length < 1) {
         this.setState({
-          notToday: true
+          notToday: true,
         });
       }
     }
@@ -148,8 +148,8 @@ class Profile extends Component {
     }
 
     this.setState(
-      prevState => ({
-        oldestFirst: !prevState.oldestFirst
+      (prevState) => ({
+        oldestFirst: !prevState.oldestFirst,
       }),
       this.makeTheLogs(sortedLogs)
     );
@@ -157,38 +157,38 @@ class Profile extends Component {
 
   render() {
     return (
-      <div className='top-push'>
+      <div className="top-push">
         <h1>Your Profile Page</h1>
         {this.state.notToday && (
           <h1>
             <b>
-              You have not created a mood log today!{' '}
-              <Link to='/create'>Create one now!</Link>
+              You have not created a mood log today!{" "}
+              <Link to="/create">Create one now!</Link>
             </b>
           </h1>
         )}
-        <div className='profile-mood-box'>
+        <div className="profile-mood-box">
           <h2>Overall Happiness: {this.state.mood}</h2>
           {this.state.logs && !this.state.block && (
             <WeatherAudit logs={this.state.rawLogs} />
           )}
         </div>
-        <div className='sort-by-age-box'>
+        <div className="sort-by-age-box">
           {this.state.rawLogs && (
-            <button className='sort-by-age' onClick={this.sortByAge}>
-              Show {this.state.oldestFirst ? 'oldest' : 'newest'} first
+            <button className="sort-by-age" onClick={this.sortByAge}>
+              Show {this.state.oldestFirst ? "oldest" : "newest"} first
             </button>
           )}
         </div>
         <br></br>
-        <div className='log-box'>{this.state.logs}</div>
+        <div className="log-box">{this.state.logs}</div>
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  user: state.user
-})
+  user: state.user,
+});
 
-export default connect(mapStateToProps)(Profile)
+export default connect(mapStateToProps)(Profile);
