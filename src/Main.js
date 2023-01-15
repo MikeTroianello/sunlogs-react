@@ -12,8 +12,8 @@ import Create from './components/Create';
 import View from './components/View';
 import Profile from './components/Profile';
 import ViewProfile from './components/ViewProfile';
-import Navbar from './components/Navbar';
-import Routes from './auth/routes';
+import Navbar from './components/Navbar/Navbar';
+import Routes from './routes';
 
 import AllProfiles from './components/profileFolder/AllProfiles';
 
@@ -125,8 +125,10 @@ class Main extends Component {
             info={this.state}
             logout={this.logout}
             history={this.history}
+            {...this.state}
           />
         </div>
+        {/* <Routes /> */}
         <Switch>
           <Route
             exact
@@ -235,10 +237,12 @@ class Main extends Component {
               />
             )}
           />
-          {/* <Route
+          <Route
             path='/view-profile/:id'
-            render={props => <ViewProfile {...props} setUser={this.setUser} />}
-          /> */}
+            render={(props) => (
+              <ViewProfile {...props} setUser={this.setUser} />
+            )}
+          />
         </Switch>
       </div>
     );
