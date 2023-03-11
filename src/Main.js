@@ -9,6 +9,7 @@ import Logout from './components/account/Logout';
 import Signup from './components/account/Signup';
 import Settings from './components/account/Settings';
 import Create from './components/Create';
+import CreateLog from './components/CreateLog';
 import View from './components/View';
 import Profile from './components/Profile';
 import ViewProfile from './components/ViewProfile';
@@ -193,11 +194,25 @@ class Main extends Component {
               />
             )}
           />
-          <Route
+          {/* <Route
             exact
             path='/create'
             render={(props) => (
               <Create
+                {...props}
+                logCreated={this.logCreated}
+                user={this.state.loggedInUser}
+                createdToday={this.state.createdLogToday}
+                setError={this.setError}
+                testIt={this.testIt}
+              />
+            )}
+          /> */}
+          <Route
+            exact
+            path='/create'
+            render={(props) => (
+              <CreateLog
                 {...props}
                 logCreated={this.logCreated}
                 user={this.state.loggedInUser}

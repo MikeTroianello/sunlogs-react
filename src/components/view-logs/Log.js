@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faGenderless as nonbinary,
   faVenus as female,
-  faMars as male
+  faMars as male,
 } from '@fortawesome/free-solid-svg-icons';
 
 export default function Log(props) {
@@ -33,6 +33,7 @@ export default function Log(props) {
 
   let theTag = props.log.creatorId.username;
 
+  // if (props.log.creatorId._id) {
   if (!props.log.demo) {
     theTag = (
       <Link to={`/view-profile/${props.log.creatorId._id}`}>
