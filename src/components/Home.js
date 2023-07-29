@@ -12,8 +12,6 @@ import Log from './view-logs/Log';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLevelUpAlt as arrow } from '@fortawesome/free-solid-svg-icons';
 
-// import video from './video/Pexels Videos 1893623.mp4';
-
 import '../css/homepage.css';
 
 export default class Home extends Component {
@@ -68,7 +66,7 @@ export default class Home extends Component {
       ? (toggle = 'Go back to Login')
       : (toggle = 'or, Create an Account Now!');
     this.state.signup ? (thing = 'card flipped') : (thing = 'card');
-    console.log('mockLog', mockLog);
+
     return (
       <div>
         <div className='homepage-top'>

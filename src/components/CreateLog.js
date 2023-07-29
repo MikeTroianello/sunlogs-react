@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import { Redirect } from 'react-router-dom';
 import { create } from '../auth/authService';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faFrown as frown,

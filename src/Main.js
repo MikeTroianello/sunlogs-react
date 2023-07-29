@@ -23,6 +23,7 @@ import { loggedin } from './auth/authService';
 
 import './App.css';
 import './css/homepage.css';
+import LandingPage from './components/LandingPage';
 
 class Main extends Component {
   state = {
@@ -131,11 +132,23 @@ class Main extends Component {
         </div>
         {/* <Routes /> */}
         <Switch>
-          <Route
+          {/* <Route
             exact
             path='/'
             render={(props) => (
               <Home
+                {...props}
+                err={this.state.errMessage}
+                setError={this.setError}
+                getUser={this.getTheUser}
+              />
+            )}
+          /> */}
+          <Route
+            exact
+            path='/'
+            render={(props) => (
+              <LandingPage
                 {...props}
                 err={this.state.errMessage}
                 setError={this.setError}

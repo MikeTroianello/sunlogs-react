@@ -43,7 +43,7 @@ class Signup extends Component {
       } else {
         const state = this.state;
         let results = await signup(state);
-        console.log('THIS IS THE RESULT', results);
+
         localStorage.setItem('token', results.token);
         // await this.props.setToken(results.token);
         this.props.logIt(results.user);

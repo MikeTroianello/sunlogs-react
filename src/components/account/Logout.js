@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import AuthService from "../../auth/auth-service";
-import { connect } from "react-redux";
-import { logOutRedux } from "../../redux/actionCreators/userActionCreator";
-import { logout } from "../../auth/authService";
+import React, { Component } from 'react';
+import AuthService from '../../auth/auth-service';
+import { connect } from 'react-redux';
+import { logOutRedux } from '../../redux/actionCreators/userActionCreator';
+import { logout } from '../../auth/authService';
 
 class Logout extends Component {
   service = new AuthService();
@@ -11,7 +11,7 @@ class Logout extends Component {
     logout().then((results) => {
       this.props.logout();
       this.props.logOutRedux();
-      this.props.history.push("/");
+      this.props.history.push('/');
     });
   }
 
