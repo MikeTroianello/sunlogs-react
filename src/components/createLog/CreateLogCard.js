@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-
 import { Redirect } from 'react-router-dom';
-import { create } from '../auth/authService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faFrown as frown,
@@ -11,6 +9,8 @@ import {
   faMeh as middlin,
   faSadTear as crying,
 } from '@fortawesome/free-solid-svg-icons';
+import { create } from '../../auth/authService';
+import { getAllDayInfo } from '../../utils/formatDays';
 
 const CreateLog = (props) => {
   const [mood, setMood] = useState(null);
@@ -22,34 +22,11 @@ const CreateLog = (props) => {
   const [err, setErr] = useState(null);
   const [message, setMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [logYear, setLogYear] = useState(null);
-  const [dayOfYear, setDayOfYear] = useState(null);
-  const [dayOfWeek, setDayOfWeek] = useState(null);
-  const [dayOfMonth, setDayOfMonth] = useState(null);
-  const [month, setMonth] = useState(null);
 
   useEffect(() => {
     if (props.user) {
-      let today = new Date();
-      var start = new Date(today.getFullYear(), 0, 0);
-      var diff =
-        today -
-        start +
-        (start.getTimezoneOffset() - today.getTimezoneOffset()) * 60 * 1000;
-      var oneDay = 1000 * 60 * 60 * 24;
-      let a = today.toString().split(' ');
-      var day = Math.floor(diff / oneDay);
-      let year = Number(a[3]);
-      const month = Number(a[2]);
-
       setPrivateJournal(props.user.privateJournalDefault);
       setHideCreator(props.user.hideCreatorDefault);
-      setDayOfYear(day);
-      setLogYear(year);
-      setDayOfYear(year);
-      setDayOfWeek(a[0]);
-      setDayOfMonth(month);
-      setMonth(month);
     }
   }, []);
 
@@ -98,19 +75,19 @@ const CreateLog = (props) => {
       setErrorMessage(`You didn't select your productivity`);
     } else {
       try {
+        const { month, year, dayOfWeek } = getAllDayInfo();
         let info = {
           mood,
-          moodEmoji,
           productivity,
           journal,
           privateJournal,
           hideCreator,
           err,
           message,
-          year: logYear,
-          dayOfYear,
+          year,
+          dayOfYear: year,
           dayOfWeek,
-          dayOfMonth,
+          dayOfMonth: month,
           month,
         };
         setMessage('Submitting your log');

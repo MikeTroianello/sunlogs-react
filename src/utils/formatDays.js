@@ -16,3 +16,25 @@ export const getDay = () => {
   let day = Math.floor(diff / oneDay);
   return day;
 };
+
+export const getAllDayInfo = () => {
+  let today = new Date();
+  var start = new Date(today.getFullYear(), 0, 0);
+  var diff =
+    today -
+    start +
+    (start.getTimezoneOffset() - today.getTimezoneOffset()) * 60 * 1000;
+  var oneDay = 1000 * 60 * 60 * 24;
+  let todayString = today.toString().split(' ');
+  var day = Math.floor(diff / oneDay);
+  let year = Number(todayString[3]);
+  const month = Number(todayString[2]);
+  const dayOfWeek = todayString[0];
+
+  return {
+    day,
+    month,
+    year,
+    dayOfWeek,
+  };
+};

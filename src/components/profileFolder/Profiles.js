@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,7 +11,7 @@ import AuthService from '../../auth/auth-service';
 import WeatherAudit from '../weather/WeatherAudit';
 import { profile, seeUser } from '../../auth/authService';
 
-class AllProfiles extends Component {
+const  AllProfiles = ({props}) => {
   state = {
     user: null,
     rawLogs: null,
@@ -23,15 +23,15 @@ class AllProfiles extends Component {
     oldestFirst: false,
     profileHeader: '',
     happinessHeader: '',
-  };
+  }
 
   service = new AuthService();
 
-  componentDidMount = () => {
+ const  componentDidMount = () => {
     this.setItAllUp();
   };
 
-  setItAllUp = async () => {
+  const setItAllUp = async () => {
     let { profileSelf } = this.props;
     this.service = new AuthService(this.props.userRedux.token);
 
@@ -44,13 +44,11 @@ class AllProfiles extends Component {
     this.makeTheLogs(results, profileSelf);
   };
 
-  componentDidUpdate(prevProps) {
-    if (this.props.profileSelf != prevProps.profileSelf) {
-      this.setItAllUp();
-    }
-  }
+  useEffect(()=>{
+    setItAllUp()
+  },[])
 
-  makeTheLogs = (results, profileSelf) => {
+  const makeTheLogs = (results, profileSelf) => {
     let today = new Date();
     var start = new Date(today.getFullYear(), 0, 0);
     var diff =

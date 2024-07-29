@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faGenderless as nonbinary,
   faVenus as female,
   faMars as male,
 } from '@fortawesome/free-solid-svg-icons';
 import AuthService from '../../auth/auth-service';
-import WeatherAudit from '../weather/WeatherAudit';
 import { profile, seeUser } from '../../auth/authService';
+import CreateLogButton from './components/CreateLogButton';
+import MoodBox from './components/MoodBox';
+import SortLogsButton from './components/SortLogsButton';
 
 class AllProfiles extends Component {
   state = {
@@ -186,22 +187,18 @@ class AllProfiles extends Component {
   };
 
   sortByAge = () => {
-    let sortedLogs;
+    let sortedLogs = this.state.rawLogs.sort((a, b) => {
+      if (a.year === b.year) {
+        return b.dayOfYear - a.dayOfYear;
+      } else {
+        return b.year - a.year;
+      }
+    });
+
     if (this.state.oldestFirst) {
-      sortedLogs = this.state.rawLogs.sort((a, b) =>
-        a.year > b.year ? 1 : -1
-      );
-      sortedLogs = this.state.rawLogs.sort((a, b) =>
-        a.dayOfYear > b.dayOfYear ? 1 : -1
-      );
-    } else {
-      sortedLogs = this.state.rawLogs.sort((a, b) =>
-        a.year < b.year ? 1 : -1
-      );
-      sortedLogs = this.state.rawLogs.sort((a, b) =>
-        a.dayOfYear < b.dayOfYear ? 1 : -1
-      );
+      sortedLogs = sortedLogs.reverse();
     }
+
     this.setState(
       (prevState) => ({
         oldestFirst: !prevState.oldestFirst,
@@ -209,40 +206,19 @@ class AllProfiles extends Component {
       this.makeTheLogs(sortedLogs, this.state.profileSelf)
     );
   };
-
   render() {
     let { profileSelf } = this.props;
 
     return (
       <div className='top-push'>
         <h1>{this.state.profileHeader}</h1>
-        {this.state.notToday && (
-          <h1>
-            <b>
-              You have not created a mood log today!{' '}
-              <Link to='/create'>Create one now!</Link>
-            </b>
-          </h1>
-        )}
-        <div className='profile-mood-box'>
-          <h2 className='view-profile-overall-happiness'>
-            {this.state.happinessHeader}
-            {this.state.mood}
-          </h2>
-          {!profileSelf && (
-            <FontAwesomeIcon icon={this.state.gender} size='3x' />
-          )}
-          {this.state.logs && !this.state.block && (
-            <WeatherAudit logs={this.state.rawLogs} />
-          )}
-        </div>
-        {this.state?.logs?.length && (
-          <div className='sort-by-age-box'>
-            <button className='sort-by-age' onClick={this.sortByAge}>
-              Show {this.state.oldestFirst ? 'oldest' : 'newest'} first
-            </button>
-          </div>
-        )}
+        {this.state.notToday && <CreateLogButton />}
+        <MoodBox state={this.state} profileSelf={profileSelf} />
+        <SortLogsButton
+          onClick={this.sortByAge}
+          logs={this.state?.logs}
+          oldestFirst={this.state?.oldestFirst}
+        />
         <br></br>
         <div className='log-box'>{this.state.logs}</div>
       </div>

@@ -2,28 +2,21 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setToken, getToken } from './redux/actionCreators/userActionCreator';
-
-import Home from './components/Home';
 import Login from './components/account/Login';
 import Logout from './components/account/Logout';
 import Signup from './components/account/Signup';
 import Settings from './components/account/Settings';
-import Create from './components/Create';
 import CreateLog from './components/CreateLog';
 import View from './components/View';
-import Profile from './components/Profile';
-import ViewProfile from './components/ViewProfile';
 import Navbar from './components/Navbar/Navbar';
-import Routes from './routes';
-
+// import Routes from './routes';
 import AllProfiles from './components/profileFolder/AllProfiles';
-
 import AuthService from './auth/auth-service';
 import { loggedin } from './auth/authService';
-
 import './App.css';
 import './css/homepage.css';
 import LandingPage from './components/LandingPage';
+import AllProfilesNew from './components/profileFolder/AllProfilesNew';
 
 class Main extends Component {
   state = {
@@ -116,10 +109,6 @@ class Main extends Component {
   };
 
   render() {
-    // if (this.state.loggedInUser) {
-    //   return <Redirect to='/profile' />;
-    // }
-
     return (
       <div>
         <div className='App'>
@@ -132,18 +121,6 @@ class Main extends Component {
         </div>
         {/* <Routes /> */}
         <Switch>
-          {/* <Route
-            exact
-            path='/'
-            render={(props) => (
-              <Home
-                {...props}
-                err={this.state.errMessage}
-                setError={this.setError}
-                getUser={this.getTheUser}
-              />
-            )}
-          /> */}
           <Route
             exact
             path='/'
@@ -182,20 +159,13 @@ class Main extends Component {
             exact
             path='/profile'
             render={(props) => (
-              <AllProfiles
+              <AllProfilesNew
                 {...props}
                 user={this.state.loggedInUser}
                 profileSelf={true}
               />
             )}
           />
-          {/* <Route
-            exact
-            path='/profile'
-            render={props => (
-              <Profile {...props} user={this.state.loggedInUser} />
-            )}
-          /> */}
           <Route
             exact
             path='/logout'
@@ -207,20 +177,6 @@ class Main extends Component {
               />
             )}
           />
-          {/* <Route
-            exact
-            path='/create'
-            render={(props) => (
-              <Create
-                {...props}
-                logCreated={this.logCreated}
-                user={this.state.loggedInUser}
-                createdToday={this.state.createdLogToday}
-                setError={this.setError}
-                testIt={this.testIt}
-              />
-            )}
-          /> */}
           <Route
             exact
             path='/create'
@@ -263,12 +219,6 @@ class Main extends Component {
                 setUser={this.setUser}
                 profileSelf={false}
               />
-            )}
-          />
-          <Route
-            path='/view-profile/:id'
-            render={(props) => (
-              <ViewProfile {...props} setUser={this.setUser} />
             )}
           />
         </Switch>

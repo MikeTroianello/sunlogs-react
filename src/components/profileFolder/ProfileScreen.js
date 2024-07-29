@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,46 +11,43 @@ import AuthService from '../../auth/auth-service';
 import WeatherAudit from '../weather/WeatherAudit';
 import { profile, seeUser } from '../../auth/authService';
 
-class AllProfiles extends Component {
-  state = {
-    user: null,
-    rawLogs: null,
-    logs: null,
-    moodAvg: [],
-    mood: null,
-    notToday: false,
-    block: false,
-    oldestFirst: false,
-    profileHeader: '',
-    happinessHeader: '',
-  };
+const defaultState = {
+  user: null,
+  rawLogs: null,
+  logs: null,
+  moodAvg: [],
+  mood: null,
+  notToday: false,
+  block: false,
+  oldestFirst: false,
+  profileHeader: '',
+  happinessHeader: '',
+};
 
-  service = new AuthService();
+const ProfileScreen = ({ props }) => {
+  const [state, setState] = useState(defaultState);
+  console.log('!state', state);
+  // const service = new AuthService(props.userRedux.token);
 
-  componentDidMount = () => {
-    this.setItAllUp();
-  };
+  // useEffect(()=>{
+  //   setItAllUp()
+  // },[setItAllUp])
 
-  setItAllUp = async () => {
-    let { profileSelf } = this.props;
-    this.service = new AuthService(this.props.userRedux.token);
+  //WHAT IS THIS DOING??
 
-    let results;
+  // componentDidUpdate(prevProps) {
+  //   if (props.profileSelf != prevProps.profileSelf) {
+  //     thiss.setItAllUp();
+  //   }
+  // }
 
-    profileSelf
-      ? (results = await profile(this.props.userRedux.token))
-      : (results = await seeUser(this.props.match.params.id));
+  // useEffect(()=>{
+  //   if (props.profileSelf != prevProps.profileSelf) {
+  //     setItAllUp();
+  //   }
+  // },[])
 
-    this.makeTheLogs(results, profileSelf);
-  };
-
-  componentDidUpdate(prevProps) {
-    if (this.props.profileSelf != prevProps.profileSelf) {
-      this.setItAllUp();
-    }
-  }
-
-  makeTheLogs = (results, profileSelf) => {
+  const makeTheLogs = (results, profileSelf) => {
     let today = new Date();
     var start = new Date(today.getFullYear(), 0, 0);
     var diff =
@@ -63,7 +60,7 @@ class AllProfiles extends Component {
     let year = a[3];
 
     if (results.length < 1 && profileSelf) {
-      this.setState({
+      setState({
         logs: (
           <div className='no-log-created'>
             You haven't created a log yet! <br />
@@ -73,7 +70,7 @@ class AllProfiles extends Component {
         block: true,
       });
     } else if (results.length < 1) {
-      this.setState({
+      setState({
         logs: <div>They haven't created any logs...</div>,
       });
     } else {
@@ -154,7 +151,7 @@ class AllProfiles extends Component {
         Math.round(100 * (moodArr.reduce(reducer) / moodArr.length)) / 100;
 
       if (profileSelf) {
-        this.setState({
+        setState({
           rawLogs: results,
           logs: theLogs,
           mood: mood,
@@ -166,12 +163,12 @@ class AllProfiles extends Component {
           return log.dayOfYear === day && log.year === Number(year);
         });
         if (dailyLog.length < 1) {
-          this.setState({
+          setState({
             notToday: true,
           });
         }
       } else {
-        this.setState({
+        setState({
           rawLogs: results,
           logs: theLogs,
           mood: mood,
@@ -185,73 +182,72 @@ class AllProfiles extends Component {
     }
   };
 
-  sortByAge = () => {
+  const setItAllUp = async () => {
+    let { profileSelf } = props;
+    let results;
+
+    profileSelf
+      ? (results = await profile(props.userRedux.token))
+      : (results = await seeUser(props.match.params.id));
+
+    makeTheLogs(results, profileSelf);
+  };
+
+  const sortByAge = () => {
     let sortedLogs;
-    if (this.state.oldestFirst) {
-      sortedLogs = this.state.rawLogs.sort((a, b) =>
-        a.year > b.year ? 1 : -1
-      );
-      sortedLogs = this.state.rawLogs.sort((a, b) =>
+    if (state.oldestFirst) {
+      sortedLogs = state.rawLogs.sort((a, b) => (a.year > b.year ? 1 : -1));
+      sortedLogs = state.rawLogs.sort((a, b) =>
         a.dayOfYear > b.dayOfYear ? 1 : -1
       );
     } else {
-      sortedLogs = this.state.rawLogs.sort((a, b) =>
-        a.year < b.year ? 1 : -1
-      );
-      sortedLogs = this.state.rawLogs.sort((a, b) =>
+      sortedLogs = state.rawLogs.sort((a, b) => (a.year < b.year ? 1 : -1));
+      sortedLogs = state.rawLogs.sort((a, b) =>
         a.dayOfYear < b.dayOfYear ? 1 : -1
       );
     }
-    this.setState(
+    setState(
       (prevState) => ({
         oldestFirst: !prevState.oldestFirst,
       }),
-      this.makeTheLogs(sortedLogs, this.state.profileSelf)
+      makeTheLogs(sortedLogs, state.profileSelf)
     );
   };
 
-  render() {
-    let { profileSelf } = this.props;
+  let { profileSelf } = props;
 
-    return (
-      <div className='top-push'>
-        <h1>{this.state.profileHeader}</h1>
-        {this.state.notToday && (
-          <h1>
-            <b>
-              You have not created a mood log today!{' '}
-              <Link to='/create'>Create one now!</Link>
-            </b>
-          </h1>
-        )}
-        <div className='profile-mood-box'>
-          <h2 className='view-profile-overall-happiness'>
-            {this.state.happinessHeader}
-            {this.state.mood}
-          </h2>
-          {!profileSelf && (
-            <FontAwesomeIcon icon={this.state.gender} size='3x' />
-          )}
-          {this.state.logs && !this.state.block && (
-            <WeatherAudit logs={this.state.rawLogs} />
-          )}
-        </div>
-        {this.state?.logs?.length && (
-          <div className='sort-by-age-box'>
-            <button className='sort-by-age' onClick={this.sortByAge}>
-              Show {this.state.oldestFirst ? 'oldest' : 'newest'} first
-            </button>
-          </div>
-        )}
-        <br></br>
-        <div className='log-box'>{this.state.logs}</div>
+  return (
+    <div className='top-push'>
+      <h1>{state.profileHeader}</h1>
+      {state.notToday && (
+        <h1>
+          <b>
+            You have not created a mood log today!{' '}
+            <Link to='/create'>Create one now!</Link>
+          </b>
+        </h1>
+      )}
+      <div className='profile-mood-box'>
+        <h2 className='view-profile-overall-happiness'>
+          {state.happinessHeader}
+          {state.mood}
+        </h2>
+        {!profileSelf && <FontAwesomeIcon icon={state.gender} size='3x' />}
+        {state.logs && !state.block && <WeatherAudit logs={state.rawLogs} />}
       </div>
-    );
-  }
-}
+      <div className='sort-by-age-box'>
+        <button className='sort-by-age' onClick={sortByAge}>
+          Show {state.oldestFirst ? 'oldest' : 'newest'} first
+        </button>
+      </div>
+      <br></br>
+      <div className='log-box'>{state.logs}</div>
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => ({
   userRedux: state.user,
 });
 
-export default connect(mapStateToProps)(AllProfiles);
+export default connect(mapStateToProps)(ProfileScreen);

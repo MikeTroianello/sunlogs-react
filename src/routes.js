@@ -149,13 +149,6 @@ class Routes extends Component {
             />
           )}
         />
-        {/* <Route
-            exact
-            path='/profile'
-            render={props => (
-              <Profile {...props} user={this.state.loggedInUser} />
-            )}
-          /> */}
         <Route
           exact
           path='/logout'
