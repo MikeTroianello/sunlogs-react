@@ -11,12 +11,12 @@ import { profile, seeUser } from '../../auth/authService';
 import CreateLogButton from './components/CreateLogButton';
 import MoodBox from './components/MoodBox';
 import SortLogsButton from './components/SortLogsButton';
+import LogCard from '../view-logs/LogCard';
 
 class AllProfiles extends Component {
   state = {
     user: null,
     rawLogs: null,
-    logs: null,
     moodAvg: [],
     mood: null,
     notToday: false,
@@ -84,7 +84,7 @@ class AllProfiles extends Component {
       let name;
       let genderIcon;
 
-      let theLogs = results.map((log, key) => {
+      let theLogs = results.map((log) => {
         if (!profileSelf) {
           if (!name) name = log.creatorId.username;
           switch (log.creatorId.gender) {
@@ -100,56 +100,6 @@ class AllProfiles extends Component {
           }
         }
         moodArr.push(log.mood);
-        let weatherString;
-        if (log.weatherIcon) {
-          weatherString = `http://openweathermap.org/img/wn/${log.weatherIcon.slice(
-            0,
-            -1
-          )}d@2x.png`;
-        } else weatherString = '';
-        return (
-          <div key={key} className='log'>
-            <div className='profile-log-head'>
-              <div>
-                <span className='profile-date'>
-                  <span>{log.month}</span> <span>{log.dayOfMonth}</span>
-                  {', '}
-                  <span>{log.year}</span>
-                </span>
-                <h2>
-                  {log.county} County, {log.state}
-                </h2>
-              </div>
-              <div className='weather-box weather-box-profile'>
-                <span>
-                  <img
-                    className='weather-icon'
-                    src={weatherString}
-                    alt={log.weatherType}
-                  />
-                </span>
-                <p> {log.weatherType}</p>
-              </div>
-            </div>
-
-            <div className='mood-and-productivity'>
-              <h3>
-                Mood: <p>{log.mood}</p>
-              </h3>
-              <h3>
-                Productivity: <p>{log.productivity}</p>
-              </h3>
-            </div>
-            <h3>Log: {log.journal}</h3>
-            {profileSelf && log.hideCreator && (
-              <i>You have hidden your name for this log</i>
-            )}
-            <br />
-            {profileSelf && log.privateJournal && (
-              <i>You have hidden this journal from public viewing</i>
-            )}
-          </div>
-        );
       });
       let mood =
         Math.round(100 * (moodArr.reduce(reducer) / moodArr.length)) / 100;
@@ -220,7 +170,12 @@ class AllProfiles extends Component {
           oldestFirst={this.state?.oldestFirst}
         />
         <br></br>
-        <div className='log-box'>{this.state.logs}</div>
+        <div className='log-box'>
+          {this.state.rawLogs &&
+            this.state.rawLogs?.map((log) => {
+              return <LogCard log={log} />;
+            })}
+        </div>
       </div>
     );
   }
