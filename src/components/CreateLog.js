@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-
 import { Redirect } from 'react-router-dom';
 import { create } from '../auth/authService';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faFrown as frown,
-  faLaugh as happiest,
-  faSmile as smile,
-  faMeh as middlin,
-  faSadTear as crying,
-} from '@fortawesome/free-solid-svg-icons';
+import MoodHandler from './createLog/MoodHandler';
+import ProductivitySelector from './createLog/ProductivitySelector';
+import JournalInput from './createLog/JournalInput';
+import PrivateLogBox from './createLog/PrivateLogBox';
+import HideCreatorBox from './createLog/HideCreatorBox';
 
 const CreateLog = (props) => {
   const [mood, setMood] = useState(null);
-  const [moodEmoji, setMoodEmoji] = useState(null);
   const [productivity, setProductivity] = useState(null);
   const [journal, setJournal] = useState(null);
   const [privateJournal, setPrivateJournal] = useState(false);
@@ -61,29 +56,23 @@ const CreateLog = (props) => {
     setProductivity(val);
   };
 
-  const moodHandler = (num) => {
-    let emoji;
-    switch (num) {
-      case 1:
-        emoji = <FontAwesomeIcon icon={crying} />;
-        break;
-      case 2:
-        emoji = <FontAwesomeIcon icon={frown} />;
-        break;
-      case 3:
-        emoji = <FontAwesomeIcon icon={middlin} />;
-        break;
-      case 4:
-        emoji = <FontAwesomeIcon icon={smile} />;
-        break;
-      default:
-        emoji = <FontAwesomeIcon icon={happiest} />;
-        break;
+  const journalHandler = (e) => {
+    if (!e) {
+      return null;
     }
+    setJournal(e.target.value);
+  };
 
-    // IF SOMETHING BREAKS, IT IS PROBABLY DUE TO THIS
+  const moodHandler = (num) => {
     setMood(num);
-    setMoodEmoji(emoji);
+  };
+
+  const privateJournalHandler = () => {
+    setPrivateJournal(!privateJournal);
+  };
+
+  const hideCreatorHandler = () => {
+    setHideCreator(!hideCreator);
   };
 
   const handleSubmit = async (e) => {
@@ -100,7 +89,8 @@ const CreateLog = (props) => {
       try {
         let info = {
           mood,
-          moodEmoji,
+          // Does this serve any purpose?
+          // moodEmoji,
           productivity,
           journal,
           privateJournal,
@@ -131,101 +121,17 @@ const CreateLog = (props) => {
     <div className='create-log-page'>
       <div className='create-log'>
         <h1>Create a Mood Log</h1>
-        <div className='create-mood-box'>
-          <label htmlFor='mood'>What is your mood? {moodEmoji}</label>
-          <br />
-          <div className='one-through-five'>
-            <FontAwesomeIcon
-              id='mood'
-              className='emotion'
-              icon={crying}
-              size='2x'
-              onClick={() => moodHandler(1)}
-            />
-            <FontAwesomeIcon
-              id='mood'
-              icon={frown}
-              size='2x'
-              onClick={() => moodHandler(2)}
-            />
-            <FontAwesomeIcon
-              id='mood'
-              icon={middlin}
-              size='2x'
-              onClick={() => moodHandler(3)}
-            />
-            <FontAwesomeIcon
-              id='mood'
-              icon={smile}
-              size='2x'
-              onClick={() => moodHandler(4)}
-            />
-            <FontAwesomeIcon
-              id='mood'
-              icon={happiest}
-              size='2x'
-              onClick={() => moodHandler(5)}
-            />
-          </div>
-        </div>
-        <div className='create-productivity-box'>
-          <label htmlFor='productivity'>
-            How productive do you think you were today?{' '}
-            <span className='one-through-five-box'>
-              <b>{productivity}</b>
-            </span>
-          </label>
-          <br />
-          <div className='one-through-five' onClick={productivityHandler}>
-            <span id='productivity'>1</span>
-            <span id='productivity'>2</span>
-            <span id='productivity'>3</span>
-            <span id='productivity'>4</span>
-            <span id='productivity'>5</span>
-          </div>
-        </div>
-        <div>
-          <label htmlFor='journal'>
-            What were some of your thoughts about today?
-          </label>
-          <textarea
-            type='textbox'
-            name='journal'
-            id='journal'
-            rows='6'
-            cols='48'
-            autoComplete='off'
-            maxLength='250'
-            placeholder='max length 250 characters'
-            onChange={(e) => setJournal(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor='privateJournal'>Make this a private Log:</label>
-          <input
-            type='checkbox'
-            name='privateJournal'
-            checked={privateJournal}
-            onChange={() => {
-              setPrivateJournal(!privateJournal);
-            }}
-          />
-        </div>
-        <div>
-          <label htmlFor='hideCreator'>Hide your status as creator*:</label>
-          <input
-            type='checkbox'
-            name='hideCreator'
-            checked={hideCreator}
-            onChange={() => {
-              setHideCreator(!hideCreator);
-            }}
-          />
-          <p>
-            (*Note: people will still see the contents of this log, they just
-            will be unable to know you created it)
-          </p>
-        </div>
+        <MoodHandler onChange={moodHandler} mood={mood} />
+        <ProductivitySelector
+          productivity={productivity}
+          onClick={productivityHandler}
+        />
+        <JournalInput onChange={journalHandler} />
+        <PrivateLogBox
+          onChange={privateJournalHandler}
+          checked={privateJournal}
+        />
+        <HideCreatorBox checked={hideCreator} onChange={hideCreatorHandler} />
         <button className='create-log-button' onClick={handleSubmit}>
           Log It
         </button>

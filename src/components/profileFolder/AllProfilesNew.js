@@ -36,11 +36,9 @@ class AllProfiles extends Component {
     let { profileSelf } = this.props;
     this.service = new AuthService(this.props.userRedux.token);
 
-    let results;
-
-    profileSelf
-      ? (results = await profile(this.props.userRedux.token))
-      : (results = await seeUser(this.props.match.params.id));
+    const results = profileSelf
+      ? await profile(this.props.userRedux.token)
+      : await seeUser(this.props.match.params.id);
 
     this.makeTheLogs(results, profileSelf);
   };
