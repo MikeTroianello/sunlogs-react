@@ -9,56 +9,42 @@ import {
   changePass,
   deleteUser,
 } from '../../auth/authService';
+import { useGetLoginInfo } from '../../hooks/useGetLoginInfo';
+import Header from './subcomponents/Header';
+import HideProfile from './subcomponents/preferences/HideProfile';
+import MakeJournalsPrivate from './subcomponents/preferences/MakeJournalsPrivate';
+import HideName from './subcomponents/preferences/HideName';
+import ChangePreferenceButton from './subcomponents/preferences/ChangePreferenceButton';
+import Preferences from './subcomponents/preferences/Preferences';
 
 const Settings = (props) => {
   const [state, setState] = useState({
     message: null,
-    hideProfile: false,
-    privateJournalDefault: false,
-    hideCreatorDefault: false,
+    // hideProfile: false,
+    // privateJournalDefault: false,
+    // hideCreatorDefault: false,
     oldPhone: null,
-    phone: null,
+    // phone: null,
     oldEmail: null,
-    email: null,
+    // email: null,
     oldPass: null,
     newPass: null,
     confirmDelete: null,
     deletePassword: null,
-    id: null,
+    // id: null,
   });
 
   const { history } = useHistory();
 
-  if (props.loggedInUser) {
-    const {
-      email,
-      hideCreatorDefault,
-      hideProfile,
-      phone,
-      privateJournalDefault,
-      id,
-    } = props.loggedInUser;
-
-    setState({
-      hideProfile: hideProfile,
-      privateJournalDefault: privateJournalDefault,
-      hideCreatorDefault: hideCreatorDefault,
-      oldPhone: phone,
-      oldEmail: email,
-      id: id,
-    });
-  } else {
-    loggedin().then((response) => {
-      setState({
-        hideProfile: response.hideProfile,
-        privateJournalDefault: response.privateJournalDefault,
-        hideCreatorDefault: response.hideCreatorDefault,
-        oldPhone: response.phone,
-        oldEmail: response.email,
-        id: response.id,
-      });
-    });
-  }
+  const { isLoggedIn, loggedInUser } = props || {};
+  const loginInfo = useGetLoginInfo(loggedInUser);
+  const {
+    email: currentEmail,
+    hideCreatorDefault,
+    hideProfile,
+    phone: currentPhone,
+    privateJournalDefault,
+  } = loginInfo || {};
 
   const toggle = (e) => {
     let statePiece = e.target.name;
@@ -73,93 +59,41 @@ const Settings = (props) => {
     });
   };
 
-  changeInfo = () => {
+  const changeTheInfo = () => {
     changeInfo(state).then((results) => {
-      props.isLoggedIn(results);
+      isLoggedIn(results);
       history.push('/profile');
     });
   };
 
-  changePass = () => {
+  const changePass = () => {
     changePass(state).then((results) => {
-      props.isLoggedIn(results);
+      isLoggedIn(results);
       history.push('/');
     });
   };
 
-  deleteUser = () => {
+  const deleteUser = () => {
     deleteUser(state.confirmDelete).then(() => {
       history.push('/');
     });
   };
-
+  console.log('!hideProfile', hideProfile);
   return (
     <div className='settings-top'>
       <div className='settings'>
-        <h1>Your Settings</h1>
-        <i>
-          Note: pressing any of the save buttons will update all fields you have
-          changed. <br />
-          They are placed in each section for convenience
-        </i>
-        <div className='settings-change-preferences'>
-          <h1>Preferences</h1>
-          <div>
-            <h3>Hide your profile</h3>
-            <p>This makes sure people will not be able to view your profile.</p>
-            <p className='settings-aside'>
-              (They still can see your name on your logs, if you choose to not
-              hide them)
-            </p>
-            <h3>{state.hideProfile}</h3>
-            <h4 className={state.hideProfile ? 'red' : 'green'}>
-              You currently {state.hideProfile === true && <span>DO NOT </span>}
-              allow others to view your profile
-            </h4>
-            <button
-              className='settings-change-preferences-button'
-              name='hideProfile'
-              onClick={toggle}
-            >
-              {state.hideProfile ? 'Show' : 'Hide'} profile
-            </button>
-          </div>
-          <div>
-            <h3>Make Journals Private by Default</h3>
-            <h4 className={state.privateJournalDefault ? 'red' : 'green'}>
-              Your Journals are{' '}
-              {state.privateJournalDefault ? 'HIDDEN' : 'shown'} by default
-            </h4>
-            <button
-              className='settings-change-preferences-button'
-              name='privateJournalDefault'
-              onClick={toggle}
-            >
-              {state.privateJournalDefault ? 'Show' : 'Hide'} by Default
-            </button>
-          </div>
-          <div>
-            <h3>Hide your name by Default</h3>
-            <h4 className={state.hideCreatorDefault ? 'red' : 'green'}>
-              Your name is {state.hideCreatorDefault ? 'HIDDEN' : 'shown'} by
-              default
-            </h4>
-            <button
-              className='settings-change-preferences-button'
-              name='hideCreatorDefault'
-              onClick={toggle}
-            >
-              {state.hideCreatorDefault ? 'Show' : 'Hide'} by Default
-            </button>
-          </div>
-          <button className='settings-change-button' onClick={changeInfo}>
-            Change Preferences
-          </button>
-        </div>
+        <Header />
+        <Preferences
+          hideProfile={hideProfile}
+          privateJournalDefault={privateJournalDefault}
+          hideCreatorDefault={hideCreatorDefault}
+          changeTheInfo={changeTheInfo}
+          onClick={toggle}
+        />
         <div className='settings-change-info'>
           <h1>Change your Account Info</h1>
           <div>
-            <h3>Your old phone number: {state.oldPhone}</h3>
+            <h3>Your old phone number: {currentPhone}</h3>
             <div className='change-account-sub-box'>
               <span>Change Phone # </span>
               <input
@@ -173,7 +107,7 @@ const Settings = (props) => {
             </div>
           </div>
           <div>
-            <h3>Your old email: {state.oldEmail}</h3>
+            <h3>Your old email: {currentEmail}</h3>
             <div className='change-account-sub-box'>
               <span>Change email</span>
               <input
@@ -185,7 +119,7 @@ const Settings = (props) => {
               />
             </div>
           </div>
-          <button className='settings-change-button' onClick={changeInfo}>
+          <button className='settings-change-button' onClick={changeTheInfo}>
             Change Info
           </button>
           <div className='settings-change-password'>
@@ -218,7 +152,7 @@ const Settings = (props) => {
           </div>
 
           <br />
-          <button className='settings-change-button' onClick={changeInfo}>
+          <button className='settings-change-button' onClick={changeTheInfo}>
             Change Password
           </button>
         </div>

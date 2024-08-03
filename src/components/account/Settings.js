@@ -40,12 +40,12 @@ class Settings extends Component {
       } = this.props.loggedInUser;
       // this.service = new AuthService(this.props.user.token);
       this.setState({
-        hideProfile: hideProfile,
-        privateJournalDefault: privateJournalDefault,
-        hideCreatorDefault: hideCreatorDefault,
+        hideProfile,
+        privateJournalDefault,
+        hideCreatorDefault,
         oldPhone: phone,
         oldEmail: email,
-        id: id,
+        id,
       });
     } else {
       loggedin().then((response) => {
