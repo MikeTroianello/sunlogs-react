@@ -1,21 +1,13 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-
 import { useHistory } from 'react-router-dom';
-
-import {
-  loggedin,
-  changeInfo,
-  changePass,
-  deleteUser,
-} from '../../auth/authService';
+import { changeInfo } from '../../auth/authService';
 import { useGetLoginInfo } from '../../hooks/useGetLoginInfo';
 import Header from './subcomponents/Header';
-import HideProfile from './subcomponents/preferences/HideProfile';
-import MakeJournalsPrivate from './subcomponents/preferences/MakeJournalsPrivate';
-import HideName from './subcomponents/preferences/HideName';
-import ChangePreferenceButton from './subcomponents/preferences/ChangePreferenceButton';
 import Preferences from './subcomponents/preferences/Preferences';
+import ChangePassword from './subcomponents/accountInfo/ChangePassword';
+import PhoneInput from './subcomponents/accountInfo/PhoneInput';
+import EmailInput from './subcomponents/accountInfo/EmailInput';
 
 const Settings = (props) => {
   const [state, setState] = useState({
@@ -78,7 +70,6 @@ const Settings = (props) => {
       history.push('/');
     });
   };
-  console.log('!hideProfile', hideProfile);
   return (
     <div className='settings-top'>
       <div className='settings'>
@@ -92,20 +83,7 @@ const Settings = (props) => {
         />
         <div className='settings-change-info'>
           <h1>Change your Account Info</h1>
-          <div>
-            <h3>Your old phone number: {currentPhone}</h3>
-            <div className='change-account-sub-box'>
-              <span>Change Phone # </span>
-              <input
-                type='tel'
-                autoComplete='off'
-                pattern='[0-9]{3}-[0-9]{3}-[0-9]{4}'
-                name='phone'
-                placeholder='+3(141)592-6535'
-                onChange={handleChange}
-              />
-            </div>
-          </div>
+          <PhoneInput currentPhone={currentPhone} onChange={handleChange} />
           <div>
             <h3>Your old email: {currentEmail}</h3>
             <div className='change-account-sub-box'>
@@ -119,37 +97,11 @@ const Settings = (props) => {
               />
             </div>
           </div>
+          <EmailInput currentEmail={currentEmail} onChange={{ handleChange }} />
           <button className='settings-change-button' onClick={changeTheInfo}>
             Change Info
           </button>
-          <div className='settings-change-password'>
-            <h3>Change Password</h3>
-            <div className='change-password-super-box'>
-              <div className='change-password-box'>
-                <div className='change-password-sub-box'>
-                  <span>New Password</span>
-                  <input
-                    type='password'
-                    name='oldPass'
-                    autoComplete='off'
-                    placeholder='********'
-                    onChange={handleChange}
-                  />
-                </div>
-                <br />
-                <div className='change-password-sub-box'>
-                  <span>Confirm Password</span>
-                  <input
-                    type='password'
-                    name='newPass'
-                    autoComplete='off'
-                    placeholder='********'
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          <ChangePassword onChange={handleChange} />
 
           <br />
           <button className='settings-change-button' onClick={changeTheInfo}>
