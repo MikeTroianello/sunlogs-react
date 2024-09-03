@@ -44,7 +44,7 @@ class AllProfiles extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (this.props.profileSelf != prevProps.profileSelf) {
+    if (this.props.profileSelf !== prevProps.profileSelf) {
       this.setItAllUp();
     }
   }
@@ -98,6 +98,7 @@ class AllProfiles extends Component {
           }
         }
         moodArr.push(log.mood);
+        return log;
       });
       let mood =
         Math.round(100 * (moodArr.reduce(reducer) / moodArr.length)) / 100;
@@ -156,7 +157,7 @@ class AllProfiles extends Component {
   };
   render() {
     let { profileSelf } = this.props;
-
+    console.log('!ALL PROFILES NEW');
     return (
       <div className='top-push'>
         <h1>{this.state.profileHeader}</h1>

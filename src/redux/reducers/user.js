@@ -6,16 +6,14 @@ const initialState = {
   loggedInUser: null,
   message: ``,
   createdLogToday: null,
-  token: null
-}
+  token: null,
+};
 
-export const user = (state = initialState, action) =>{
-  switch(action.type){
+export const user = (state = initialState, action) => {
+  switch (action.type) {
     case ActionTypes.SET_TOKEN:
-      return {...state, token: action.payload}
-    case ActionTypes.SET_TOKEN:
-      return {...initialState}
+      return { ...state, token: action.payload };
     default:
-      return state
+      return state;
   }
-}
+};

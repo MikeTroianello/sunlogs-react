@@ -9,11 +9,9 @@ const LogCard = ({ log, props }) => {
   let { profileSelf } = props || {};
 
   const {
-    month,
-    dayOfMonth,
-    year,
     county,
     state,
+    date,
     weatherType,
     mood,
     productivity,
@@ -24,6 +22,8 @@ const LogCard = ({ log, props }) => {
     _id: id,
   } = log || {};
 
+  const logDate = new Date(date);
+
   let weatherString = weatherIcon
     ? `http://openweathermap.org/img/wn/${weatherIcon.slice(0, -1)}d@2x.png`
     : '';
@@ -33,9 +33,7 @@ const LogCard = ({ log, props }) => {
       <div className='profile-log-head'>
         <div>
           <span className='profile-date'>
-            <span>{month}</span> <span>{dayOfMonth}</span>
-            {', '}
-            <span>{year}</span>
+            <span>{logDate.toDateString()}</span>
           </span>
           <h2>
             {county} County, {state}

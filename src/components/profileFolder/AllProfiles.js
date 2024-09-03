@@ -45,7 +45,7 @@ class AllProfiles extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (this.props.profileSelf != prevProps.profileSelf) {
+    if (this.props.profileSelf !== prevProps.profileSelf) {
       this.setItAllUp();
     }
   }
@@ -212,7 +212,7 @@ class AllProfiles extends Component {
 
   render() {
     let { profileSelf } = this.props;
-
+    console.log('!ALLPROFILES');
     return (
       <div className='top-push'>
         <h1>{this.state.profileHeader}</h1>

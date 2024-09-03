@@ -8,7 +8,7 @@ class Logout extends Component {
   service = new AuthService();
 
   componentDidMount() {
-    logout().then((results) => {
+    logout().then(() => {
       this.props.logout();
       this.props.logOutRedux();
       this.props.history.push('/');
@@ -16,7 +16,7 @@ class Logout extends Component {
   }
 
   render() {
-    return <div></div>;
+    return <div />;
   }
 }
 

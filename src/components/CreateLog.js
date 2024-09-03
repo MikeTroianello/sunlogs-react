@@ -23,8 +23,11 @@ const CreateLog = (props) => {
   const [dayOfMonth, setDayOfMonth] = useState(null);
   const [month, setMonth] = useState(null);
 
+  const { user } = props || {};
+  const { hideCreatorDefault, privateJournalDefault } = user || {};
+
   useEffect(() => {
-    if (props.user) {
+    if (user) {
       let today = new Date();
       var start = new Date(today.getFullYear(), 0, 0);
       var diff =
@@ -37,8 +40,8 @@ const CreateLog = (props) => {
       let year = Number(a[3]);
       const month = Number(a[2]);
 
-      setPrivateJournal(props.user.privateJournalDefault);
-      setHideCreator(props.user.hideCreatorDefault);
+      setPrivateJournal(privateJournalDefault);
+      setHideCreator(hideCreatorDefault);
       setDayOfYear(day);
       setLogYear(year);
       setDayOfYear(year);
@@ -46,7 +49,7 @@ const CreateLog = (props) => {
       setDayOfMonth(month);
       setMonth(month);
     }
-  }, []);
+  }, [hideCreatorDefault, privateJournalDefault, user]);
 
   const productivityHandler = (e) => {
     const val = Number(e.target.innerText);

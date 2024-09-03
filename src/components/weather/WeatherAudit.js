@@ -8,7 +8,13 @@ export default function WeatherAudit(props) {
   let snow = [];
   let outlier = [];
 
-  props.logs.map(log => {
+  const { logs = [] } = props || {};
+
+  if (!logs.length) {
+    return null;
+  }
+
+  logs.forEach((log) => {
     switch (log.weatherType) {
       case 'Clear':
         clear.push(log);
@@ -29,7 +35,6 @@ export default function WeatherAudit(props) {
         outlier.push(log);
         break;
     }
-    return log;
   });
 
   return (

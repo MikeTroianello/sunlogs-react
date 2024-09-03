@@ -9,14 +9,13 @@ import Settings from './components/account/Settings';
 import CreateLog from './components/CreateLog';
 import View from './components/View';
 import Navbar from './components/Navbar/Navbar';
-// import Routes from './routes';
 import AllProfiles from './components/profileFolder/AllProfiles';
 import AuthService from './auth/auth-service';
 import { loggedin } from './auth/authService';
 import './App.css';
 import './css/homepage.css';
 import LandingPage from './components/LandingPage';
-import AllProfilesNew from './components/profileFolder/AllProfilesNew';
+import ProfilesV2 from './components/profileFolder/ProfilesV2';
 
 class Main extends Component {
   state = {
@@ -159,7 +158,7 @@ class Main extends Component {
             exact
             path='/profile'
             render={(props) => (
-              <AllProfilesNew
+              <ProfilesV2
                 {...props}
                 user={this.state.loggedInUser}
                 profileSelf={true}

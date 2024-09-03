@@ -1,7 +1,4 @@
 import axios from 'axios';
-import {connect} from 'react-redux'
-import {user} from '../redux/reducers/user'
-
 
 class AuthService {
   constructor(token) {
@@ -9,7 +6,7 @@ class AuthService {
       // baseURL: `https://sunlogs-express-api.herokuapp.com/api/`,
       baseURL: `http://localhost:5000/api/`,
       headers: {
-        "x-auth-token": token
+        'x-auth-token': token,
       },
       credentials: 'omit',
     });
@@ -17,19 +14,14 @@ class AuthService {
   }
 
   test = () => {
-    return this.service
-      .get('/')
-      .then(res=>res.data)
-
-  }
-
+    return this.service.get('/').then((res) => res.data);
+  };
 
   signup = (state) => {
     return this.service
       .post('/signup', { state })
       .then((response) => response.data);
   };
-
 
   //TOKEN
   loggedin = (day, year) => {
@@ -42,10 +34,11 @@ class AuthService {
     return this.service
       .post('/login', { username, password, day, year })
       .then((response) => {
-       return response.data});
+        return response.data;
+      });
   };
 
-   //TOKEN
+  //TOKEN
   create = (info, token) => {
     return this.service
       .post('/log/create', { info })
@@ -57,20 +50,19 @@ class AuthService {
       .get(`/log/date/${year}/${dayOfYear}`)
       .then((response) => response.data);
   };
- //TOKEN
+  //TOKEN
   profile = (token) => {
-
     return this.service
       .get(`/log/all/my-posts`)
       .then((response) => response.data);
   };
- //TOKEN
+  //TOKEN
   seeUser = (userId, token) => {
     return this.service
       .get(`/log/all/${userId}`)
       .then((response) => response.data);
   };
- //TOKEN
+  //TOKEN
   changeInfo = (userInfo, token) => {
     return this.service
       .post(`/change-info`, { userInfo })
@@ -82,7 +74,7 @@ class AuthService {
       .post(`/change-password`, { userInfo })
       .then((response) => response.data);
   };
- //TOKEN
+  //TOKEN
   deleteUser = (confirmation, token) => {
     return this.service
       .post(`/delete-user`, { confirmation })
@@ -94,10 +86,4 @@ class AuthService {
   };
 }
 
-const mapStateToProps = (state) => ({
-  user: state.user
-})
-
-
 export default AuthService;
-// export default connect(mapStateToProps)(AuthService);
