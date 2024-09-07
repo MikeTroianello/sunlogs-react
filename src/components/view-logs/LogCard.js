@@ -1,12 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const LogCard = ({ log, props }) => {
+const LogCard = ({ log, profileSelf }) => {
   if (!log) {
     return null;
   }
-
-  let { profileSelf } = props || {};
 
   const {
     county,
