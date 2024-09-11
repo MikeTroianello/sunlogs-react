@@ -46,6 +46,7 @@ export const create = async (info) => {
   return response.data;
 };
 
+//TODO: Rename to getLogsByDate
 export const getDate = async (year, dayOfYear) => {
   const response = await get(`/log/date/${year}/${dayOfYear}`);
   return response.data;

@@ -3,12 +3,14 @@ import { profile, seeUser } from '../auth/authService';
 
 //TODO: Add seeUser to see other profiles
 
-export const useLogs = ({ profileSelf, userRedux }) => {
+export const useLogs = ({ profileSelf, userRedux, userId }) => {
   const [logs, setLogs] = useState([]);
   const [newestFirst, setNewestFirst] = useState(true);
 
   const fetchLogs = useCallback(async () => {
-    const fetchedLogs = await profile(userRedux.token);
+    const fetchedLogs = profileSelf
+      ? await profile(userRedux?.token)
+      : seeUser(userId);
     setLogs(fetchedLogs);
   }, [setLogs, userRedux]);
 

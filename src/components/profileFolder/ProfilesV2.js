@@ -14,7 +14,9 @@ import { useLogs } from '../../hooks/useLogs';
 import ProfileHeader from './components/ProfileHeader';
 
 const ProfilesV2 = (props) => {
-  const { profileSelf, userRedux } = props;
+  const { profileSelf, userRedux, match } = props || {};
+  const { params } = match || {};
+  const { id: userId } = params || {};
 
   const {
     isTodaysLogCreated,
@@ -22,7 +24,7 @@ const ProfilesV2 = (props) => {
     mood,
     newestFirst,
     sortByAge,
-  } = useLogs({ profileSelf, userRedux });
+  } = useLogs({ profileSelf, userRedux, userId });
 
   // TODO - Find new way to fetch name and genderIcons
   const name = null;

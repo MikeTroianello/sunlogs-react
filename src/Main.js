@@ -16,6 +16,7 @@ import './App.css';
 import './css/homepage.css';
 import LandingPage from './components/LandingPage';
 import ProfilesV2 from './components/profileFolder/ProfilesV2';
+import ViewLogsV2 from './screens/ViewLogs/ViewLogsV2';
 
 class Main extends Component {
   state = {
@@ -193,13 +194,23 @@ class Main extends Component {
           <Route
             path='/view'
             render={(props) => (
-              <View
+              <ViewLogsV2
                 {...props}
                 createdToday={this.state.createdLogToday}
                 loggedInUser={this.state.loggedInUser}
               />
             )}
           />
+          {/* <Route
+            path='/view'
+            render={(props) => (
+              <View
+                {...props}
+                createdToday={this.state.createdLogToday}
+                loggedInUser={this.state.loggedInUser}
+              />
+            )}
+          /> */}
           <Route
             path='/settings'
             render={(props) => (
