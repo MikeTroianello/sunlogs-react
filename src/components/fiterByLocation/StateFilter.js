@@ -1,11 +1,11 @@
 import React from 'react';
 
-export default function StateFilter(props) {
+const StateFilter = ({ filter, states = [] }) => {
   return (
     <div>
-      <select name='state' onChange={props.filter}>
+      <select name='state' onChange={filter}>
         <option selected>Filter by State:</option>
-        {props.states.map((state, key) => {
+        {states.map((state, key) => {
           return (
             <option key={key} value={state}>
               {state}
@@ -15,4 +15,6 @@ export default function StateFilter(props) {
       </select>
     </div>
   );
-}
+};
+
+export default StateFilter;

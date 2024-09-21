@@ -7,6 +7,7 @@ import ProductivitySelector from './createLog/ProductivitySelector';
 import JournalInput from './createLog/JournalInput';
 import PrivateLogBox from './createLog/PrivateLogBox';
 import HideCreatorBox from './createLog/HideCreatorBox';
+import SubmissionSection from './createLog/SubmissionSection';
 
 const CreateLog = (props) => {
   const [mood, setMood] = useState(null);
@@ -17,37 +18,14 @@ const CreateLog = (props) => {
   const [err, setErr] = useState(null);
   const [message, setMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [logYear, setLogYear] = useState(null);
-  const [dayOfYear, setDayOfYear] = useState(null);
-  const [dayOfWeek, setDayOfWeek] = useState(null);
-  const [dayOfMonth, setDayOfMonth] = useState(null);
-  const [month, setMonth] = useState(null);
 
   const { user } = props || {};
   const { hideCreatorDefault, privateJournalDefault } = user || {};
 
   useEffect(() => {
     if (user) {
-      let today = new Date();
-      var start = new Date(today.getFullYear(), 0, 0);
-      var diff =
-        today -
-        start +
-        (start.getTimezoneOffset() - today.getTimezoneOffset()) * 60 * 1000;
-      var oneDay = 1000 * 60 * 60 * 24;
-      let a = today.toString().split(' ');
-      var day = Math.floor(diff / oneDay);
-      let year = Number(a[3]);
-      const month = Number(a[2]);
-
       setPrivateJournal(privateJournalDefault);
       setHideCreator(hideCreatorDefault);
-      setDayOfYear(day);
-      setLogYear(year);
-      setDayOfYear(year);
-      setDayOfWeek(a[0]);
-      setDayOfMonth(month);
-      setMonth(month);
     }
   }, [hideCreatorDefault, privateJournalDefault, user]);
 
@@ -100,11 +78,6 @@ const CreateLog = (props) => {
           hideCreator,
           err,
           message,
-          year: logYear,
-          dayOfYear,
-          dayOfWeek,
-          dayOfMonth,
-          month,
         };
         setMessage('Submitting your log');
         await create(info);
@@ -135,12 +108,11 @@ const CreateLog = (props) => {
           checked={privateJournal}
         />
         <HideCreatorBox checked={hideCreator} onChange={hideCreatorHandler} />
-        <button className='create-log-button' onClick={handleSubmit}>
-          Log It
-        </button>
-        <br></br>
-        {errorMessage && <b className='red'>{errorMessage}</b>}
-        {message && <b className='black'>{message}</b>}
+        <SubmissionSection
+          handleSubmit={handleSubmit}
+          errorMessage={errorMessage}
+          message={message}
+        />
       </div>
     </div>
   );
